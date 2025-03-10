@@ -1,6 +1,6 @@
 use crate::core::domain::entity::player::Player;
-use crate::core::domain::system::user::command::spawn_user;
-use crate::core::domain::system::user::render::{execute_animations, trigger_animation};
+use crate::core::domain::system::player::command::spawn_user;
+use crate::core::domain::system::player::render::{execute_animations, trigger_animation};
 use bevy::input::common_conditions::input_just_pressed;
 use bevy::prelude::*;
 

@@ -1,3 +1,3 @@
 pub mod ai;
 pub mod common;
-pub mod user;
+pub mod player;

@@ -1,15 +1,44 @@
 use crate::core::domain::component::render::AnimationConfig;
 use crate::core::domain::entity::player::Player;
 use bevy::input::ButtonInput;
+use bevy::log;
 use bevy::prelude::{KeyCode, Query, Res, Sprite, Time, With};
 
 pub fn trigger_animation(
     mut query: Query<&mut AnimationConfig, With<Player>>,
     input: Res<ButtonInput<KeyCode>>,
 ) {
-    if input.just_pressed(KeyCode::Space) {
-        for mut animation_config in query.iter_mut() {
-            animation_config.frame_timer = AnimationConfig::timer_from_fps(animation_config.fps);
+    if let Some(key) = input.get_just_pressed() {
+        match key {
+            KeyCode::ArrowDown => {
+                for mut animation_config in query.iter_mut() {
+                    animation_config.frame_timer =
+                        AnimationConfig::timer_from_fps(animation_config.fps);
+                    log::info!("Arrow Down pressed!");
+                }
+            }
+            KeyCode::ArrowLeft => {
+                for mut animation_config in query.iter_mut() {
+                    animation_config.frame_timer =
+                        AnimationConfig::timer_from_fps(animation_config.fps);
+                    log::info!("Arrow Left pressed!");
+                }
+            }
+            KeyCode::ArrowRight => {
+                for mut animation_config in query.iter_mut() {
+                    animation_config.frame_timer =
+                        AnimationConfig::timer_from_fps(animation_config.fps);
+                    log::info!("Arrow Right pressed!");
+                }
+            }
+            KeyCode::ArrowUp => {
+                for mut animation_config in query.iter_mut() {
+                    animation_config.frame_timer =
+                        AnimationConfig::timer_from_fps(animation_config.fps);
+                    log::info!("Arrow Up pressed!");
+                }
+            }
+            _ => {}
         }
     }
 }
