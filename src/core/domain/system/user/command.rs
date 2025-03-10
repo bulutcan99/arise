@@ -18,7 +18,7 @@ pub fn spawn_user(
     let layout = TextureAtlasLayout::from_grid(UVec2::splat(24), 7, 1, None, None);
     let texture_atlas_layout = texture_atlas_layouts.add(layout);
     // the sprite runs at 10 FPS
-    let animation_config = AnimationConfig::new(1, 6, 10);
+    let animation_config = AnimationConfig::new(1, 6, 20);
     commands.spawn((
         Sprite {
             image: texture.clone(),
