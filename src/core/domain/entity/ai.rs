@@ -4,4 +4,4 @@ use bevy::prelude::Component;
 pub struct Enemy(pub u32);
 
 #[derive(Component)]
-pub struct Friend(pub u32);
+pub struct Friendly(pub u32);

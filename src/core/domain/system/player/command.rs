@@ -1,11 +1,10 @@
-use crate::core::domain::component::render::AnimationConfig;
-use crate::core::domain::component::warrior::Warrior;
-use crate::core::domain::entity::player::Player;
+use crate::core::domain::component::attribute::{Dexterity, Intelligence, Strength};
+use crate::core::domain::component::class::Warrior;
+use crate::core::domain::component::combat::{AttackPower, Defense};
+use crate::core::domain::component::movement::{Position, Velocity};
+use crate::core::domain::component::stat::{Experience, Health, Level, Mana, Stamina};
 use bevy::asset::{AssetServer, Assets};
-use bevy::math::{UVec2, Vec3};
-use bevy::prelude::{
-    Camera2d, Commands, Res, ResMut, Sprite, TextureAtlas, TextureAtlasLayout, Transform,
-};
+use bevy::prelude::{Camera2d, Commands, Res, ResMut, TextureAtlasLayout, Vec2};
 
 pub fn spawn_user(
     mut commands: Commands,
@@ -13,24 +12,19 @@ pub fn spawn_user(
     mut texture_atlas_layouts: ResMut<Assets<TextureAtlasLayout>>,
 ) {
     commands.spawn(Camera2d);
-
-    let texture = asset_server.load("user.png");
-    let layout = TextureAtlasLayout::from_grid(UVec2::splat(24), 7, 1, None, None);
-    let texture_atlas_layout = texture_atlas_layouts.add(layout);
-    // the sprite runs at 10 FPS
-    let animation_config = AnimationConfig::new(1, 6, 20);
     commands.spawn((
-        Sprite {
-            image: texture.clone(),
-            texture_atlas: Some(TextureAtlas {
-                layout: texture_atlas_layout.clone(),
-                index: animation_config.first_sprite_index,
-            }),
-            ..Default::default()
-        },
-        Transform::from_scale(Vec3::splat(6.0)).with_translation(Vec3::new(50.0, 0.0, 0.0)),
-        Player(1),
-        Warrior::new(),
-        animation_config,
+        Warrior,
+        Strength(1),
+        Dexterity(1),
+        Intelligence(1),
+        AttackPower(1),
+        Defense(1),
+        Position(Vec2::new(0., 0.)),
+        Velocity(Vec2::new(0., 0.)),
+        Health(100),
+        Mana(50),
+        Stamina(10),
+        Level(1),
+        Experience(0),
     ));
 }
