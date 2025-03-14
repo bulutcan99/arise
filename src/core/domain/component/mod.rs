@@ -1,3 +1,4 @@
+pub mod ai;
 pub mod attribute;
 pub mod class;
 pub mod combat;
