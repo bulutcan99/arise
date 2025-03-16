@@ -26,7 +26,7 @@ pub fn spawn_player(
         Level(1),
         Experience(0),
         Health(100),
-        AttackPower(1),
+        AttackPower(50),
         Sprite {
             image: texture.clone(),
             ..Default::default()
