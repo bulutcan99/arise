@@ -1,8 +1,9 @@
 use crate::core::domain::component::attribute::{Dexterity, Intelligence, Strength};
 use crate::core::domain::component::class::Warrior;
 use crate::core::domain::component::combat::{AttackPower, Defense};
+use crate::core::domain::component::movement::Direction;
 use crate::core::domain::component::stat::{Experience, Health, Level, Mana, Stamina};
-use crate::core::domain::entity::player::Player;
+use crate::core::domain::entity::entity::Player;
 use bevy::asset::AssetServer;
 use bevy::prelude::{Commands, Query, Res, Sprite, Transform, Vec2, Vec3, Window, With};
 use bevy::window::PrimaryWindow;
@@ -27,6 +28,7 @@ pub fn spawn_player(
         Experience(0),
         Health(100),
         AttackPower(50),
+        Direction(Vec3::ZERO),
         Sprite {
             image: texture.clone(),
             ..Default::default()

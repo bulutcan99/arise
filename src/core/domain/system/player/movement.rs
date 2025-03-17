@@ -1,4 +1,4 @@
-use crate::core::domain::entity::player::Player;
+use crate::core::domain::entity::entity::Player;
 use crate::core::domain::system::player::common::{PLAYER_SIZE, PLAYER_SPEED};
 use bevy::log;
 use bevy::prelude::{ButtonInput, Camera, KeyCode, Query, Res, Time, Transform, Vec3, With};

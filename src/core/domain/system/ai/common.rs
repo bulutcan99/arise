@@ -1,1 +1,2 @@
-pub const ENEMY_NUMBER: u8 = 5;
+pub const AI_ENEMY_NUMBER: u8 = 5;
+pub const AI_ENEMY_SPEED: f32 = 5.0;

@@ -1,4 +1,4 @@
-use crate::core::domain::entity::player::Player;
+use crate::core::domain::entity::entity::Player;
 use bevy::prelude::{Camera, Camera2d, Query, Transform, With, Without};
 
 pub fn follow_player(
