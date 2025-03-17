@@ -4,9 +4,9 @@ use crate::core::domain::component::combat::AttackPower;
 use crate::core::domain::component::movement::Direction;
 use crate::core::domain::component::stat::{Experience, Health, Level};
 use crate::core::domain::entity::entity::{Ai, Player};
-use crate::core::domain::system::ai::common::AI_ENEMY_NUMBER;
+use crate::core::domain::system::ai::common::{AI_ENEMY_NUMBER, AI_ENEMY_SIZE};
 use bevy::asset::AssetServer;
-use bevy::math::Vec3;
+use bevy::math::{Vec2, Vec3};
 use bevy::prelude::{Commands, Query, Res, Sprite, Transform, Window, With};
 use bevy::window::PrimaryWindow;
 use rand::random;
@@ -36,6 +36,7 @@ pub fn spawn_ai_enemy(
             Direction(Vec3::new(random::<f32>(), random::<f32>(), 0.0).normalize()),
             Sprite {
                 image: texture.clone(),
+                custom_size: Some(Vec2::new(AI_ENEMY_SIZE / 2.0, AI_ENEMY_SIZE / 2.0)),
                 ..Default::default()
             },
             Transform::from_xyz(rand_width, rand_height, 0.0),
