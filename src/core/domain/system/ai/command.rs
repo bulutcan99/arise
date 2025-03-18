@@ -34,12 +34,12 @@ pub fn spawn_ai_enemy(
             Health(50),
             AttackPower(20),
             Direction(Vec3::new(random::<f32>(), random::<f32>(), 0.0).normalize()),
+            Transform::from_xyz(rand_width, rand_height, 0.0),
             Sprite {
                 image: texture.clone(),
                 custom_size: Some(Vec2::new(AI_ENEMY_SIZE / 2.0, AI_ENEMY_SIZE / 2.0)),
                 ..Default::default()
             },
-            Transform::from_xyz(rand_width, rand_height, 0.0),
         ));
     }
 }

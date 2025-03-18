@@ -30,11 +30,11 @@ pub fn spawn_player(
         Health(100),
         AttackPower(50),
         Direction(Vec3::ZERO),
+        Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
         Sprite {
             image: texture.clone(),
             custom_size: Some(Vec2::new(PLAYER_SIZE / 2.0, PLAYER_SIZE / 2.0)),
             ..Default::default()
         },
-        Transform::from_xyz(window.width() / 2.0, window.height() / 2.0, 0.0),
     ));
 }

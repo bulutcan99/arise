@@ -40,7 +40,7 @@ pub fn player_movement(
     player_transform.translation += time.delta_secs() + direction * PLAYER_SPEED;
 }
 
-pub fn confine_player_movement(
+pub fn player_confine_movement(
     mut player_query: Query<&mut Transform, With<Player>>,
     window_query: Query<&mut Window, With<PrimaryWindow>>,
 ) {

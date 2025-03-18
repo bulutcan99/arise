@@ -2,10 +2,15 @@ use crate::core::domain::component::ai::Enemy;
 use crate::core::domain::component::movement::Direction;
 use crate::core::domain::entity::entity::Ai;
 use crate::core::domain::system::ai::common::{AI_ENEMY_SIZE, AI_ENEMY_SPEED};
+use bevy::audio::AudioLoader;
+use bevy::audio::AudioSource;
 use bevy::log;
-use bevy::prelude::{Query, Res, Transform, Window, With};
+use bevy::prelude::{
+    AssetServer, AudioPlayer, Commands, PlaybackSettings, Query, Res, Transform, Window, With,
+};
 use bevy::time::Time;
 use bevy::window::PrimaryWindow;
+use rand::random;
 
 pub fn ai_enemy_movement(
     mut enemy_query: Query<(&mut Transform, &Direction), (With<Ai>, With<Enemy>)>,
@@ -16,9 +21,11 @@ pub fn ai_enemy_movement(
     }
 }
 
-pub fn ai_enemy_bounce(
-    mut enemy_query: Query<(&mut Transform, &mut Direction), (With<Ai>, With<Enemy>)>,
+pub fn ai_enemy_confine_movement(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
     window_query: Query<&Window, With<PrimaryWindow>>,
+    mut enemy_query: Query<(&mut Transform, &mut Direction), (With<Ai>, With<Enemy>)>,
 ) {
     let Ok(window) = window_query.get_single() else {
         log::error!("Failed to get window");
@@ -57,6 +64,9 @@ pub fn ai_enemy_bounce(
 
         if bounced {
             direction.0 = direction.0.normalize();
+            let bounce_effect = asset_server.load("audio/pluck_001.ogg");
+
+            commands.spawn((AudioPlayer::new(bounce_effect), PlaybackSettings::default()));
         }
     }
 }
