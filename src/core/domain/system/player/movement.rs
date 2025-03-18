@@ -1,5 +1,5 @@
 use crate::core::domain::entity::entity::Player;
-use crate::core::domain::system::player::common::{PLAYER_SIZE, PLAYER_SPEED};
+use crate::core::domain::system::common::common::BALL_SIZE;
 use bevy::log;
 use bevy::prelude::{ButtonInput, Camera, KeyCode, Query, Res, Time, Transform, Vec3, With};
 use bevy::window::{PrimaryWindow, Window};
@@ -37,7 +37,7 @@ pub fn player_movement(
         direction = direction.normalize();
     }
 
-    player_transform.translation += time.delta_secs() + direction * PLAYER_SPEED;
+    player_transform.translation += time.delta_secs() + direction;
 }
 
 pub fn player_confine_movement(
@@ -50,7 +50,7 @@ pub fn player_confine_movement(
             return;
         };
 
-        let half_size_player = PLAYER_SIZE / 2.0;
+        let half_size_player = BALL_SIZE / 2.0;
         let x_min = 0.0 + half_size_player;
         let x_max = window_query.width() - half_size_player;
         let y_min = 0.0 + half_size_player;

@@ -1,3 +1,4 @@
 pub mod camera;
 pub mod command;
-mod movement;
+pub mod common;
+pub mod movement;

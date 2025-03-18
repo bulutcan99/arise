@@ -1,7 +1,7 @@
 use crate::core::domain::component::ai::Enemy;
-use crate::core::domain::component::movement::Direction;
+use crate::core::domain::component::base::Velocity;
 use crate::core::domain::entity::entity::Ai;
-use crate::core::domain::system::ai::common::{AI_ENEMY_SIZE, AI_ENEMY_SPEED};
+use crate::core::domain::system::common::common::BALL_SIZE;
 use bevy::audio::AudioLoader;
 use bevy::audio::AudioSource;
 use bevy::log;
@@ -13,11 +13,11 @@ use bevy::window::PrimaryWindow;
 use rand::random;
 
 pub fn ai_enemy_movement(
-    mut enemy_query: Query<(&mut Transform, &Direction), (With<Ai>, With<Enemy>)>,
+    mut enemy_query: Query<(&mut Transform, &Velocity), (With<Ai>, With<Enemy>)>,
     time: Res<Time>,
 ) {
     for (mut transform, direction) in enemy_query.iter_mut() {
-        transform.translation += time.delta_secs() + direction.0 * AI_ENEMY_SPEED;
+        transform.translation += time.delta_secs() + direction.0;
     }
 }
 
@@ -25,14 +25,14 @@ pub fn ai_enemy_confine_movement(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
     window_query: Query<&Window, With<PrimaryWindow>>,
-    mut enemy_query: Query<(&mut Transform, &mut Direction), (With<Ai>, With<Enemy>)>,
+    mut enemy_query: Query<(&mut Transform, &mut Velocity), (With<Ai>, With<Enemy>)>,
 ) {
     let Ok(window) = window_query.get_single() else {
         log::error!("Failed to get window");
         return;
     };
 
-    let half_size = AI_ENEMY_SIZE / 2.0;
+    let half_size = BALL_SIZE / 2.0;
 
     let x_min = half_size;
     let x_max = window.width() - half_size;
