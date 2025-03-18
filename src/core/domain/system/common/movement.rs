@@ -3,6 +3,8 @@ use crate::core::domain::system::common::common::BALL_SIZE;
 use bevy::asset::AssetServer;
 use bevy::prelude::{Commands, Query, Res, Time, Transform};
 
+//TODO: topun size'lari iceriden alinacak constant yerine
+//TODO: toplara player bir anda yaklastiginda ai'lar buga giriyor
 pub fn models_collision(
     mut commands: Commands,
     asset_server: Res<AssetServer>,
