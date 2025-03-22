@@ -1,2 +1,2 @@
-# Roguelike Game
-ARISE
+# Bevy Game
+Learning the basic of bevy engine.
