@@ -1,10 +1,10 @@
-# Solo Survivors
+# Arise
 
 A Vampire Survivors-style action roguelike built with [Bevy](https://bevyengine.org/), inspired by the world, classes, and abilities of _Solo Leveling_.
 
 ## 🎯 Project Vision
 
-Solo Survivors is a top-down survival action game where the player must endure waves of enemies, level up, and gain powerful skills. Characters, classes, and abilities are heavily influenced by the Solo Leveling universe — expect shadow soldiers, powerful hunters, and flashy skills.
+Arise is a top-down survival action game where the player must endure waves of enemies, level up, and gain powerful skills. Characters, classes, and abilities are heavily influenced by the Solo Leveling universe — expect shadow soldiers, powerful hunters, and flashy skills.
 
 ---
 
