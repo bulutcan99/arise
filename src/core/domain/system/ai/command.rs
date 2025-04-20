@@ -1,7 +1,7 @@
 use crate::core::domain::component::ai::Enemy;
 use crate::core::domain::component::base::{Size, Velocity};
-use crate::core::domain::component::class::Warrior;
 use crate::core::domain::component::combat::AttackPower;
+use crate::core::domain::component::hunter_type::Warrior;
 use crate::core::domain::component::stat::{Experience, Health, Level};
 use crate::core::domain::entity::entity::{Ai, Player};
 use crate::core::domain::system::ai::common::AI_ENEMY_NUMBER;

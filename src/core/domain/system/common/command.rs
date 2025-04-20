@@ -1,6 +1,6 @@
 use crate::core::domain::component::attribute::{Dexterity, Intelligence, Strength};
-use crate::core::domain::component::class::Warrior;
 use crate::core::domain::component::combat::{AttackPower, Defense};
+use crate::core::domain::component::hunter_type::Warrior;
 use crate::core::domain::component::stat::{Experience, Health, Level, Mana, Stamina};
 use bevy::asset::AssetServer;
 use bevy::prelude::{

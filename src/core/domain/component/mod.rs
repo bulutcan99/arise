@@ -1,9 +1,9 @@
 pub mod ai;
 pub mod attribute;
 pub mod base;
-pub mod class;
 pub mod combat;
-pub mod enemy;
+pub mod hunter_type;
+pub mod monster_type;
 pub mod render;
 pub mod resource;
 pub mod stat;
