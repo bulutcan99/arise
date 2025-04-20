@@ -37,13 +37,13 @@ Arise is a top-down survival action game where the player must endure waves of e
   - [ ] Mage
   - [ ] Assassin
   - [ ] Healer
-  - [ ] Tank
+  - [ ] Ranger
 - [ ] Implement class-specific abilities:
   - [ ] Shadow Summoning (revive dead enemies as allies)
   - [ ] Fireball / AoE spells
   - [ ] Stealth or blink mechanics
   - [ ] Healing aura or burst heal
-  - [ ] Taunt / Shield Wall
+  - [ ] Rain of Arrows
 - [ ] Allow class selection or class-based unlocks
 
 ---
