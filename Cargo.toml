@@ -1,16 +1,108 @@
 [package]
-name = "server"
+name = "arise"
 version = "0.1.0"
 edition = "2021"
-keywords = ["gamedev", "bevy", "roguelike"]
+authors = ["Bulut Gocer <gocerbulutcan@gmail.com>"]
+publish = false
+exclude = ["dist", "build", "assets", "credits"]
 
+[features]
+dev = ["bevy/dynamic_linking"]
+
+# -----------------------------------------------------------------------------
+# Profiles
+# -----------------------------------------------------------------------------
+
+# Dev profile: optimize dependencies for performance but keep our code easy to debug
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev]
+opt-level = 1
+debug = false
+lto = false
+#codegen-units = 8
+
+# Release profile: small binary, good for mobile builds (xbuild uses this too)
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+strip = true
+debug = false
+
+# Distribution profile: optimized for performance
+[profile.dist]
+inherits = "release"
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+# -----------------------------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------------------------
 
 [dependencies]
-tokio = { version = "1.43.0" , features = ["full"] }
-lazy_static = "1.5.0"
-rand = "0.9.0"
-bevy = { version = "0.15.3", features = ["dynamic_linking"] }
+anyhow = "1.0.79"
+bevy = { version = "0.15.0", default-features = true, features = [
+  "flac",
+  "jpeg",
+  "wayland",
+] }
+bevy_asset_loader = { version = "0.22.0", features = [
+  "2d",
+  "progress_tracking",
+  "standard_dynamic_assets",
+] }
+bevy_ecs_tilemap = { version = "0.15.0" }
+bevy_common_assets = { version = "0.12", features = ["toml", "ron"] }
+bevy_ecs_ldtk = { version = "0.11.0" }
+bevy_egui = "0.33"
+bevy-inspector-egui = "0.30"
+bevy_fluent = "0.11.0"
+bevy_kira_audio = { version = "0.22.0", features = ["android_shared_stdcxx"] }
+bevy_sprite3d = "4.0.0"
+cpal = "0.15.3"
+derive_more = "2.0.1"
+directories = "6.0.0"
+enum-iterator = "2.1.0"
+enum-map = "2.7.3"
+fluent_content = "0.0.5"
+glam = "0.30.2"
+log = { version = "0.4", features = [
+  "max_level_debug",
+  "release_max_level_warn",
+] }
+ran = "2.0.1"
+rand = "0.9.1"
+rapier2d = "0.24"
+rodio = "0.20.1"
+serde = { version = "1.0.196", features = ["derive"] }
+serde_with = "3.6.1"
+strum = "0.27.1"
+strum_macros = "0.27.1"
+thiserror = "2.0.12"
+toml = "0.8.10"
+unic-langid = "0.9.4"
+webbrowser = { version = "1", features = ["hardened"] }
+winit = { version = "0.30", default-features = false }
+# -----------------------------------------------------------------------------
+# Build Dependencies
+# -----------------------------------------------------------------------------
 
+[build-dependencies]
+bevy_hanabi = { git = "https://github.com/djeedai/bevy_hanabi", rev = "cabb3cb", default-features = false, features = [
+  "3d",
+] }
+embed-resource = "3.0.2"
+num_cpus = "1.16.0"
+smallvec = "1.13.2"
 
-[workspace]
-resolver = "2"
+# -----------------------------------------------------------------------------
+# Clippy Lint Configuration
+# -----------------------------------------------------------------------------
+
+[lints.clippy]
+type_complexity = "allow"
+
