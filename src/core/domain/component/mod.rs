@@ -1,9 +1,0 @@
-pub mod ai;
-pub mod attribute;
-pub mod base;
-pub mod combat;
-pub mod hunter_type;
-pub mod monster_type;
-pub mod render;
-pub mod resource;
-pub mod stat;
