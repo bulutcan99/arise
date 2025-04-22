@@ -325,12 +325,12 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_common_assets",
  "bevy_ecs_ldtk",
- "bevy_ecs_tilemap",
  "bevy_egui",
  "bevy_fluent",
  "bevy_hanabi",
  "bevy_kira_audio",
  "bevy_sprite3d",
+ "bevy_tiling_background",
  "cpal",
  "directories",
  "embed-resource",
@@ -1973,6 +1973,15 @@ dependencies = [
  "smallvec",
  "sys-locale",
  "unicode-bidi",
+]
+
+[[package]]
+name = "bevy_tiling_background"
+version = "0.12.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b915fbd60f04a0addc19b7c5a568b6408e6a876e285469bd02047566a779b85e"
+dependencies = [
+ "bevy 0.15.1",
 ]
 
 [[package]]
