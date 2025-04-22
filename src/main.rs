@@ -1,4 +1,4 @@
-use background::{plugin::BackgroundPlugin, system::setup};
+use background::generator::BackgroundPlugin;
 use bevy::prelude::*;
 use bevy_tiling_background::{BackgroundMaterial, TilingBackgroundPlugin};
 
@@ -8,6 +8,6 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
         .add_plugins(TilingBackgroundPlugin::<BackgroundMaterial>::default())
-        .add_systems(Startup, setup)
+        .add_plugins(BackgroundPlugin)
         .run();
 }
