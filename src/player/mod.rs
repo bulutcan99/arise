@@ -1,6 +1,7 @@
 use bevy::app::Plugin;
 
 // Player logicleri bu kisimda yer alicak
+pub mod asset;
 pub mod movement;
 
 pub struct PlayerPlugin;
