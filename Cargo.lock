@@ -325,12 +325,12 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_common_assets",
  "bevy_ecs_ldtk",
+ "bevy_ecs_tilemap",
  "bevy_egui",
  "bevy_fluent",
  "bevy_hanabi",
  "bevy_kira_audio",
  "bevy_sprite3d",
- "bevy_tiling_background",
  "cpal",
  "directories",
  "embed-resource",
@@ -338,6 +338,7 @@ dependencies = [
  "enum-map",
  "fluent_content",
  "glam 0.30.2",
+ "leafwing-input-manager",
  "log",
  "num_cpus",
  "ran",
@@ -869,6 +870,7 @@ dependencies = [
  "bevy_reflect 0.15.1",
  "bevy_tasks 0.15.3",
  "bevy_utils 0.15.3",
+ "serde",
  "uuid",
 ]
 
@@ -1090,6 +1092,7 @@ dependencies = [
  "bevy 0.15.1",
  "bevy_internal 0.15.1",
  "log",
+ "serde",
 ]
 
 [[package]]
@@ -1354,6 +1357,7 @@ dependencies = [
  "bevy_reflect 0.15.1",
  "bevy_utils 0.15.3",
  "derive_more 1.0.0",
+ "serde",
  "smol_str",
 ]
 
@@ -1881,6 +1885,7 @@ dependencies = [
  "nonmax",
  "radsort",
  "rectangle-pack",
+ "serde",
 ]
 
 [[package]]
@@ -1976,15 +1981,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bevy_tiling_background"
-version = "0.12.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b915fbd60f04a0addc19b7c5a568b6408e6a876e285469bd02047566a779b85e"
-dependencies = [
- "bevy 0.15.1",
-]
-
-[[package]]
 name = "bevy_time"
 version = "0.13.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2009,6 +2005,7 @@ dependencies = [
  "bevy_reflect 0.15.1",
  "bevy_utils 0.15.3",
  "crossbeam-channel",
+ "serde",
 ]
 
 [[package]]
@@ -2037,6 +2034,7 @@ dependencies = [
  "bevy_math 0.15.1",
  "bevy_reflect 0.15.1",
  "derive_more 1.0.0",
+ "serde",
 ]
 
 [[package]]
@@ -2068,6 +2066,7 @@ dependencies = [
  "bytemuck",
  "derive_more 1.0.0",
  "nonmax",
+ "serde",
  "smallvec",
  "taffy",
 ]
@@ -2160,6 +2159,7 @@ dependencies = [
  "bevy_reflect 0.15.1",
  "bevy_utils 0.15.3",
  "raw-window-handle",
+ "serde",
  "smol_str",
 ]
 
@@ -2215,6 +2215,7 @@ dependencies = [
  "cfg-if",
  "crossbeam-channel",
  "raw-window-handle",
+ "serde",
  "wasm-bindgen",
  "web-sys",
  "wgpu-types 23.0.0",
@@ -3116,6 +3117,24 @@ name = "dpi"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f25c0e292a7ca6d6498557ff1df68f32c99850012b6ea401cf8daf771f22ff53"
+
+[[package]]
+name = "dyn-clone"
+version = "1.0.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1c7a8fb8a9fbf66c1f703fe16184d10ca0ee9d23be5b4436400408ba54a95005"
+
+[[package]]
+name = "dyn-eq"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5c2d035d21af5cde1a6f5c7b444a5bf963520a9f142e5d06931178433d7d5388"
+
+[[package]]
+name = "dyn-hash"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "15401da73a9ed8c80e3b2d4dc05fe10e7b72d7243b9f614e516a44fa99986e88"
 
 [[package]]
 name = "ecolor"
@@ -4506,6 +4525,35 @@ name = "lazy_static"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
+
+[[package]]
+name = "leafwing-input-manager"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c89e71d2afcb4afae71f5f064fe709d15a379bb6b42397ef4d89cb9d5bd0f5bf"
+dependencies = [
+ "bevy 0.15.1",
+ "derive_more 0.99.19",
+ "dyn-clone",
+ "dyn-eq",
+ "dyn-hash",
+ "itertools 0.13.0",
+ "leafwing_input_manager_macros",
+ "serde",
+ "serde_flexitos",
+]
+
+[[package]]
+name = "leafwing_input_manager_macros"
+version = "0.16.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b30df0fc3244190ab3b651f27a0e626b0d5e279768740437886a5d32ec5ac099"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro2",
+ "quote",
+ "syn 2.0.100",
+]
 
 [[package]]
 name = "lebe"
@@ -6300,6 +6348,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.100",
+]
+
+[[package]]
+name = "serde_flexitos"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3323d093d7597660758b742dd7a1525539613f6182b306a4e1dd6e01a89bada9"
+dependencies = [
+ "erased-serde",
+ "serde",
 ]
 
 [[package]]

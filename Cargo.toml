@@ -55,7 +55,11 @@ bevy_asset_loader = { version = "0.22.0", features = [
   "progress_tracking",
   "standard_dynamic_assets",
 ] }
-bevy_tiling_background = { version = "0.12.0" }
+leafwing-input-manager = { version = "0.16.0", features = [
+  "mouse",
+  "keyboard",
+] }
+bevy_ecs_tilemap = { version = "0.15.0", features = ["serde"] }
 bevy_common_assets = { version = "0.12", features = ["toml", "ron"] }
 bevy_ecs_ldtk = { version = "0.11.0" }
 bevy_egui = "0.33"
@@ -104,4 +108,3 @@ smallvec = "1.13.2"
 
 [lints.clippy]
 type_complexity = "allow"
-
