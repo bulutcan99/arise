@@ -13,8 +13,7 @@ Arise is a top-down survival action game where the player must endure waves of e
 ### 📦 Phase 1: Project Setup
 
 - [x] Initialize Bevy project with workspace layout
-- [ ] Add asset loading system (sprites, maps, sounds)
-- [ ] Set up input handling
+- [x] Set up input handling
 - [ ] Implement basic game loop (start, playing, game over)
 - [ ] Add debugging tools (eg. FPS counter, entity inspector)
 
@@ -68,6 +67,7 @@ Arise is a top-down survival action game where the player must endure waves of e
 
 ### 🗺️ Phase 6: Map & Environment
 
+- [ ] Add asset loading system (sprites, maps, sounds)
 - [ ] Infinite scrolling or large looping map
 - [ ] Spawn zones and hazard zones
 - [ ] Environmental objects (trees, rocks, ruins)

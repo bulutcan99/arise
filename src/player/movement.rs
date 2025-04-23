@@ -9,9 +9,9 @@ use leafwing_input_manager::{
     Actionlike, InputManagerBundle,
 };
 
-pub struct PlayerActionPlugin;
+pub struct ActionPlugin;
 
-impl Plugin for PlayerActionPlugin {
+impl Plugin for ActionPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(InputManagerPlugin::<Action>::default());
     }
