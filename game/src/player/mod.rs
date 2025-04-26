@@ -1,8 +1,8 @@
 use bevy::app::Plugin;
 
 // Player logicleri bu kisimda yer alicak
-pub mod asset;
-pub mod movement;
+pub mod assets;
+pub mod input;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
@@ -10,3 +10,6 @@ impl Plugin for PlayerPlugin {
         todo!()
     }
 }
+
+#[derive(Component)]
+pub struct Player;

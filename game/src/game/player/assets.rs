@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use bevy_asset_loader::asset_collection::AssetCollection;
 
+//TODO: simdilik burayi kullanma!
 #[derive(AssetCollection, Resource)]
 pub struct Asset {
     //Sprite sheet
