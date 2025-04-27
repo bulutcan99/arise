@@ -1,1 +1,1 @@
-/// Game logic defines here!
+// Game logic defines here!

@@ -1,8 +1,6 @@
-use bevy::app::Plugin;
+use bevy::prelude::*;
 
 // Player logicleri bu kisimda yer alicak
-pub mod assets;
-pub mod input;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {

@@ -1,32 +1,27 @@
 use bevy::prelude::*;
 
+mod appstate;
 mod assets;
 mod camera;
 mod consts;
+mod development;
 mod game;
+mod gamestate;
 mod map;
-pub mod player;
-mod state;
+mod player;
 mod ui;
 
 fn main() {
-    App::new()
-        .add_plugins(
-            DefaultPlugins
-                .set(ImagePlugin::default_nearest())
-                .set(WindowPlugin {
-                    primary_window: Some(Window {
-                        title: "Roguelike Game".to_string(),
-                        resolution: (
-                            consts::WINDOW_WIDTH as f32 * 10.0,
-                            consts::WINDOW_HEIGHT as f32 * 10.0,
-                        )
-                            .into(),
-                        ..Default::default()
-                    }),
-                    ..Default::default()
-                }),
-        )
-        .insert_resource(ClearColor(Color::srgb_u8(1, 50, 45)))
-        .run();
+    let mut app = App::new();
+    app.insert_resource(ClearColor(Color::srgb_u8(1, 50, 45)));
+    let bevy_plugins = DefaultPlugins;
+    let bevy_plugins = bevy_plugins.set(ImagePlugin::default_nearest());
+    // Default plugins
+    app.add_plugins(bevy_plugins);
+    // Our plugins
+    app.add_plugins((
+        camera::CameraPlugin,
+        assets::AssetLoaderPlugin,
+    ));
+    app.run();
 }

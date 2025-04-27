@@ -1,8 +1,6 @@
-use super::player::Player;
 use bevy::prelude::*;
 
-#[derive(Component)]
-pub struct GameCamera;
+use super::player::Player;
 
 pub struct CameraPlugin;
 
@@ -12,6 +10,9 @@ impl Plugin for CameraPlugin {
             .add_systems(PostUpdate, move_camera);
     }
 }
+
+#[derive(Component)]
+pub struct GameCamera;
 
 fn setup(mut commands: Commands) {
     commands.spawn((Camera2d, GameCamera));
@@ -24,6 +25,7 @@ fn move_camera(
     let Ok(player_transform) = player_query.get_single() else {
         return;
     };
+
     let Ok(mut camera_transform) = camera_query.get_single_mut() else {
         return;
     };

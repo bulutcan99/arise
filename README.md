@@ -14,7 +14,7 @@ Arise is a top-down survival action game where the player must endure waves of e
 
 - [x] Initialize Bevy project with workspace layout
 - [x] Set up input handling
-- [ ] Implement basic game loop (start, playing, game over)
+- [x] Implement basic game loop (start, playing, game over)
 - [ ] Add debugging tools (eg. FPS counter, entity inspector)
 
 ---
