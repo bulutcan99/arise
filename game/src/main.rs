@@ -8,7 +8,6 @@ mod development;
 mod game;
 mod gamestate;
 mod map;
-mod player;
 mod ui;
 
 fn main() {
@@ -20,8 +19,9 @@ fn main() {
     app.add_plugins(bevy_plugins);
     // Our plugins
     app.add_plugins((
-        camera::CameraPlugin,
+        // camera::CameraPlugin,
         assets::AssetLoaderPlugin,
+        development::DevelopmentPlugin,
     ));
     app.run();
 }

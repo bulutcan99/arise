@@ -57,9 +57,13 @@ bevy = { version = "0.15.0", default-features = true, features = [
   "flac",
   "jpeg",
   "wayland",
+  "bevy_dev_tools"
 ] }
 bevy_asset_loader = "0.22.0"
-leafwing-input-manager = { version = "0.16.0", features = ["mouse", "keyboard"] }
+leafwing-input-manager = { version = "0.16.0", features = [
+  "mouse",
+  "keyboard",
+] }
 bevy_ecs_tilemap = { version = "0.15.0", features = ["serde"] }
 bevy_common_assets = { version = "0.12", features = ["toml", "ron"] }
 bevy_ecs_ldtk = "0.11.0"
@@ -74,7 +78,10 @@ enum-iterator = "2.1.0"
 enum-map = "2.7.3"
 fluent_content = "0.0.5"
 glam = "0.30.2"
-log = { version = "0.4", features = ["max_level_debug", "release_max_level_warn"] }
+log = { version = "0.4", features = [
+  "max_level_debug",
+  "release_max_level_warn",
+] }
 ran = "2.0.1"
 rand = "0.9.1"
 rapier2d = "0.24"
@@ -88,7 +95,12 @@ toml = "0.8.10"
 unic-langid = "0.9.4"
 webbrowser = { version = "1", features = ["hardened"] }
 winit = { version = "0.30", default-features = false }
-bevy_hanabi = { git = "https://github.com/djeedai/bevy_hanabi", rev = "cabb3cb", default-features = false, features = ["3d"] }
+bevy_hanabi = { git = "https://github.com/djeedai/bevy_hanabi", rev = "cabb3cb", default-features = false, features = [
+  "3d",
+] }
+bevy_editor_pls = "0.10.0"
+bevy_prototype_lyon = "0.13.0"
+iyes_perf_ui = "0.4.0"
 
 # -----------------------------------------------------------------------------
 # Build Dependencies
