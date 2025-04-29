@@ -45,7 +45,7 @@ impl Plugin for DevelopmentPlugin {
                         ..default()
                     },
                     // We can also change color of the overlay
-                    text_color: OverlayColor::GREEN.color(),
+                    text_color: OverlayColor::Green.color(),
                     ..Default::default()
                 },
             },
@@ -75,15 +75,15 @@ fn setup(mut commands: Commands) {
 }
 
 enum OverlayColor {
-    RED,
-    GREEN,
+    Red,
+    Green,
 }
 
 impl OverlayColor {
     pub fn color(&self) -> Color {
         match self {
-            OverlayColor::RED => Color::srgb(1.0, 0.0, 0.0),
-            OverlayColor::GREEN => Color::srgb(0.0, 1.0, 0.0),
+            OverlayColor::Red => Color::srgb(1.0, 0.0, 0.0),
+            OverlayColor::Green => Color::srgb(0.0, 1.0, 0.0),
         }
     }
 }
@@ -94,10 +94,10 @@ fn customize_config(
 ) {
     if input.just_pressed(KeyCode::Digit1) {
         // Changing resource will affect overlay
-        if overlay.text_color == OverlayColor::GREEN.color() {
-            overlay.text_color = OverlayColor::RED.color();
+        if overlay.text_color == OverlayColor::Green.color() {
+            overlay.text_color = OverlayColor::Red.color();
         } else {
-            overlay.text_color = OverlayColor::GREEN.color();
+            overlay.text_color = OverlayColor::Green.color();
         }
     }
     if input.just_pressed(KeyCode::Digit2) {
