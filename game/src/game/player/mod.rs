@@ -1,8 +1,9 @@
 use bevy::app::Plugin;
+use bevy::ecs::bundle::Bundle;
 
 // Player logicleri bu kisimda yer alicak
-pub mod assets;
-pub mod input;
+pub mod action;
+pub mod character;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
@@ -10,3 +11,7 @@ impl Plugin for PlayerPlugin {
         todo!()
     }
 }
+
+/// Bundle of all player-specific components
+#[derive(Bundle)]
+pub struct PlayerBundle {}
