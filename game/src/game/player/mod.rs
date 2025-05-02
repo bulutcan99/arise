@@ -1,5 +1,4 @@
-use bevy::app::Plugin;
-use bevy::ecs::bundle::Bundle;
+use bevy::prelude::*;
 
 // Player logicleri bu kisimda yer alicak
 pub mod abilities;
@@ -16,3 +15,20 @@ impl Plugin for PlayerPlugin {
 /// Bundle of all player-specific components
 #[derive(Bundle)]
 pub struct PlayerBundle {}
+
+/// Identity of a player component, used for syncing UI
+#[derive(Component, Clone, Copy, PartialEq, Debug)]
+pub enum PlayerIDComponent {
+    One,
+    Two,
+}
+
+/// Useful for mapping an index to a PlayerIDComponent
+impl From<usize> for PlayerIDComponent {
+    fn from(value: usize) -> Self {
+        match value {
+            0 => PlayerIDComponent::One,
+            _ => PlayerIDComponent::Two,
+        }
+    }
+}

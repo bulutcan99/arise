@@ -4,6 +4,15 @@ use std::hash::Hash;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use super::PlayerIDComponent;
+
+#[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]
+pub enum AbilitySlotIDComponent {
+    One,
+    Two,
+    Three,
+}
+
 /// Abilities that can occupy the first skill slot of a character.
 #[derive(Clone, Deserialize, PartialEq, Eq, Hash)]
 pub enum SlotOneAbilityType {
@@ -40,4 +49,76 @@ pub enum SlotThreeAbilityType {
 pub struct AbilityDescriptionsResource {
     pub slot_one: HashMap<SlotOneAbilityType, String>,
     pub slot_two: HashMap<SlotTwoAbilityType, String>,
+    pub slot_three: HashMap<SlotThreeAbilityType, String>,
 }
+
+/// Event for triggering ability systems to fire when criteria like inputs and cooldowns are met
+#[derive(Event, Debug)]
+pub struct ActivateAbilityEvent {
+    /// ID of the player that activated the ability
+    pub player_id: PlayerIDComponent,
+    /// Slot of the ability that was activated
+    pub ability_slot_id: AbilitySlotIDComponent,
+}
+
+impl ActivateAbilityEvent {
+    pub fn new(
+        player_id: PlayerIDComponent,
+        ability_slot_id: AbilitySlotIDComponent,
+    ) -> Self {
+        Self {
+            player_id,
+            ability_slot_id,
+        }
+    }
+}
+
+/// Stores the attributes for all abilities in the game.
+/// Each ability is tied to its data type and can be used to generate ECS components.
+#[derive(Resource, Deserialize)]
+pub struct AbilitiesResource {
+    // === Ability1 ===
+    /// Sung Jin-Woo's resurrection ability.
+    pub shadow_summon: ShadowSummonData,
+
+    /// Fighter’s melee combo.
+    pub blade_flurry: BladeFlurryData,
+
+    // === Ability2 ===
+    /// Sung Jin-Woo’s shadow dash.
+    pub shadow_dash: DashAbilityData,
+
+    /// Fighter’s dash strike.
+    pub dash_strike: DashAbilityData,
+
+    // === Ability3 ===
+    /// Sung Jin-Woo's ultimate transformation.
+    pub monarch_form: MonarchFormData,
+
+    /// Fighter's berserker mode.
+    pub rage: RageAbilityData,
+}
+
+/// Component for tracking ability cooldowns
+#[derive(Component, Deserialize, Clone)]
+pub struct AbilityCooldownComponent {
+    /// Stored seperately so that it can used with the player's cooldown multiplier
+    /// to set the duration of the cooldown timer
+    pub base_cooldown_time: f32,
+    /// Tracks a cooldown for an ability
+    pub cooldown_timer: Timer,
+}
+
+impl AbilityCooldownComponent {
+    pub fn new(base_cooldown_time: f32) -> Self {
+        Self {
+            base_cooldown_time,
+            cooldown_timer: Timer::from_seconds(
+                base_cooldown_time,
+                TimerMode::Once,
+            ),
+        }
+    }
+}
+
+pub struct ShadowSummonData {}
