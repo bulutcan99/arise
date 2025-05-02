@@ -2,6 +2,7 @@ use bevy::app::Plugin;
 use bevy::ecs::bundle::Bundle;
 
 // Player logicleri bu kisimda yer alicak
+pub mod abilities;
 pub mod action;
 pub mod character;
 
