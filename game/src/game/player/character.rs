@@ -28,8 +28,8 @@ pub enum CharacterType {
 /// High-level categories representing a character's overall strengths and weaknesses.
 /// These are used to provide a quick overview of the character's general performance style.
 #[derive(EnumIter)]
+/// Offensive capabilities such as damage, fire rate, and critical hits.
 pub enum CharacterStatType {
-    /// Offensive capabilities such as damage, fire rate, and critical hits.
     Offense,
 
     /// Defensive capabilities including health, armor, dodge, and sustain effects like lifesteal.
