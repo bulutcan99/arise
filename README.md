@@ -31,11 +31,8 @@ Arise is a top-down survival action game where the player must endure waves of e
 
 ### 🧙‍♂️ Phase 3: Class & Ability System (Inspired by Solo Leveling)
 
-- [ ] Design and define character classes:
+- [ ] Design and define character class:
   - [ ] Shadow Monarch
-  - [ ] Mage
-  - [ ] Assassin
-  - [ ] Ranger
 - [ ] Implement class-specific abilities:
   - [ ] Shadow Summoning (revive dead enemies as allies)
   - [ ] Fireball / AoE spells
@@ -101,8 +98,10 @@ Arise is a top-down survival action game where the player must endure waves of e
 - [ ] Animations & particles
 - [ ] Performance optimization
 - [ ] Bug fixing and player feedback loop
-
----
+- [ ] Design new classes:
+  - [ ] Mage
+  - [ ] Assassin
+  - [ ] Fighter
 
 ### 🚀 Phase 10: Release
 

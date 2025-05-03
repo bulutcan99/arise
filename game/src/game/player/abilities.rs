@@ -18,9 +18,6 @@ pub enum AbilitySlotIDComponent {
 pub enum SlotOneAbilityType {
     /// Sung Jin-Woo's shadow resurrection ability.
     ShadowSummon,
-
-    /// Fighter character’s quick melee combo.
-    BladeFlurry,
 }
 
 /// Abilities that can occupy the second skill slot of a character.
@@ -28,9 +25,6 @@ pub enum SlotOneAbilityType {
 pub enum SlotTwoAbilityType {
     /// Sung Jin-Woo's shadow dash ability.
     ShadowDash,
-
-    /// Fighter character’s quick dash combo.
-    DashStrike,
 }
 
 /// Ultimate or transformation abilities in slot 3.
@@ -38,9 +32,6 @@ pub enum SlotTwoAbilityType {
 pub enum SlotThreeAbilityType {
     /// Sung Jin-Woo's power-up form
     MonarchForm,
-
-    /// Fighter berserker mode
-    Rage,
 }
 
 /// Hashmaps of ability types to descriptions
@@ -81,22 +72,13 @@ pub struct AbilitiesResource {
     /// Sung Jin-Woo's resurrection ability.
     pub shadow_summon: ShadowSummonData,
 
-    /// Fighter’s melee combo.
-    pub blade_flurry: BladeFlurryData,
-
     // === Ability2 ===
     /// Sung Jin-Woo’s shadow dash.
     pub shadow_dash: DashAbilityData,
 
-    /// Fighter’s dash strike.
-    pub dash_strike: DashAbilityData,
-
     // === Ability3 ===
     /// Sung Jin-Woo's ultimate transformation.
     pub monarch_form: MonarchFormData,
-
-    /// Fighter's berserker mode.
-    pub rage: RageAbilityData,
 }
 
 /// Component for tracking ability cooldowns
@@ -104,21 +86,46 @@ pub struct AbilitiesResource {
 pub struct AbilityCooldownComponent {
     /// Stored seperately so that it can used with the player's cooldown multiplier
     /// to set the duration of the cooldown timer
-    pub base_cooldown_time: f32,
+    pub cooldown_time: f32,
     /// Tracks a cooldown for an ability
     pub cooldown_timer: Timer,
 }
 
 impl AbilityCooldownComponent {
-    pub fn new(base_cooldown_time: f32) -> Self {
+    pub fn new(cooldown_time: f32) -> Self {
         Self {
-            base_cooldown_time,
-            cooldown_timer: Timer::from_seconds(
-                base_cooldown_time,
-                TimerMode::Once,
-            ),
+            cooldown_time,
+            cooldown_timer: Timer::from_seconds(cooldown_time, TimerMode::Once),
         }
     }
 }
 
-pub struct ShadowSummonData {}
+/// Deserializable data for `ShadowSummonBundle`
+/// Stores minimum data required to instantiate
+pub struct ShadowSummonData {
+    /// Which ability slot this ability occupies (Slot1, Slot2, etc.)
+    pub slot: AbilitySlotIDComponent,
+
+    /// Cooldown time
+    pub cooldown_time: f32,
+
+    /// Core attributes of summon shadow ability
+    pub ability: ShadowSummonComponentData,
+}
+
+/// Deserializable data for `ShadowSummonComponent`.
+/// Defines the resurrection logic for converting defeated enemies into player-controlled summons.
+#[derive(Deserialize, Clone, Copy, Debug)]
+pub struct ShadowSummonComponentData {
+    /// Maximum number of summons that can be active at a time
+    pub max_summons: u32,
+
+    /// How much health a summon inherits from the defeated enemy (0.0 to 1.0)
+    pub health_percentage: f32,
+
+    /// How much damage a summon inherits from the defeated enemy (0.0 to 1.0)
+    pub damage_percentage: f32,
+
+    /// Optional duration the summon remains alive (in seconds). If None, it's permanent.
+    pub duration: Option<f32>,
+}
