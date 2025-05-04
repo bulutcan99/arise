@@ -12,8 +12,41 @@ pub struct HealthComponent {
 }
 
 impl HealthComponent {
-    pub fn new(health: u32, max_health: u32) -> Self {
-        Self { health, max_health }
+    pub fn new(max_health: u32) -> Self {
+        Self {
+            health: max_health.clone(),
+            max_health,
+        }
+    }
+
+    pub fn is_dead(&self) -> bool {
+        if self.max_health <= 0 {
+            return true;
+        }
+        false
+    }
+
+    pub fn take_damage(&mut self, taken_damage: u32) {
+        self.health -= taken_damage
+    }
+
+    pub fn heal(&mut self, health: u32) {
+        self.health = (self.health + health).min(self.max_health);
+    }
+
+    pub fn health_percentage(&self) -> f32 {
+        if self.max_health > 0 {
+            return self.health as f32 / self.max_health as f32;
+        }
+        0.0
+    }
+
+    pub fn increase_max_health(&mut self, value: u32) {
+        self.max_health += value;
+    }
+
+    pub fn full_heal(&mut self) {
+        self.health = self.max_health;
     }
 }
 
