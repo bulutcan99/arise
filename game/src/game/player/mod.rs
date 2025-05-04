@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-// Player logicleri bu kisimda yer alicak
 pub mod abilities;
 pub mod action;
 pub mod character;
+pub mod shadow_monarch;
 
 pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {

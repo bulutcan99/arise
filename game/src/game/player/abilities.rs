@@ -2,8 +2,12 @@ use std::collections::HashMap;
 use std::hash::Hash;
 
 use bevy::prelude::*;
+use bevy::render::extract_resource::ExtractResource;
 use serde::{Deserialize, Serialize};
 
+use super::shadow_monarch::{
+    MonarchFormData, ShadowDashData, ShadowSummonData,
+};
 use super::PlayerIDComponent;
 
 #[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]
@@ -64,23 +68,6 @@ impl ActivateAbilityEvent {
     }
 }
 
-/// Stores the attributes for all abilities in the game.
-/// Each ability is tied to its data type and can be used to generate ECS components.
-#[derive(Resource, Deserialize)]
-pub struct AbilitiesResource {
-    // === Ability1 ===
-    /// Sung Jin-Woo's resurrection ability.
-    pub shadow_summon: ShadowSummonData,
-
-    // === Ability2 ===
-    /// Sung Jin-Woo’s shadow dash.
-    pub shadow_dash: DashAbilityData,
-
-    // === Ability3 ===
-    /// Sung Jin-Woo's ultimate transformation.
-    pub monarch_form: MonarchFormData,
-}
-
 /// Component for tracking ability cooldowns
 #[derive(Component, Deserialize, Clone)]
 pub struct AbilityCooldownComponent {
@@ -100,32 +87,19 @@ impl AbilityCooldownComponent {
     }
 }
 
-/// Deserializable data for `ShadowSummonBundle`
-/// Stores minimum data required to instantiate
-pub struct ShadowSummonData {
-    /// Which ability slot this ability occupies (Slot1, Slot2, etc.)
-    pub slot: AbilitySlotIDComponent,
+/// Stores the attributes for all abilities in the game.
+/// Each ability is tied to its data type and can be used to generate ECS components.
+#[derive(Resource, Deserialize)]
+pub struct AbilitiesResource {
+    // === Slot1Abilities ===
+    /// Sung Jin-Woo's resurrection ability.
+    pub shadow_summon: ShadowSummonData,
 
-    /// Cooldown time
-    pub cooldown_time: f32,
+    // === Slot2Abilities ===
+    /// Sung Jin-Woo’s shadow dash.
+    pub shadow_dash: ShadowDashData,
 
-    /// Core attributes of summon shadow ability
-    pub ability: ShadowSummonComponentData,
-}
-
-/// Deserializable data for `ShadowSummonComponent`.
-/// Defines the resurrection logic for converting defeated enemies into player-controlled summons.
-#[derive(Deserialize, Clone, Copy, Debug)]
-pub struct ShadowSummonComponentData {
-    /// Maximum number of summons that can be active at a time
-    pub max_summons: u32,
-
-    /// How much health a summon inherits from the defeated enemy (0.0 to 1.0)
-    pub health_percentage: f32,
-
-    /// How much damage a summon inherits from the defeated enemy (0.0 to 1.0)
-    pub damage_percentage: f32,
-
-    /// Optional duration the summon remains alive (in seconds). If None, it's permanent.
-    pub duration: Option<f32>,
+    // === Slot3Abilities ===
+    /// Sung Jin-Woo's ultimate transformation.
+    pub monarch_form: MonarchFormData,
 }
