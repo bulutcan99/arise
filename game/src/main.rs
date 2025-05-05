@@ -4,10 +4,9 @@ mod appstate;
 mod assets;
 mod camera;
 mod consts;
-mod development;
 mod game;
-mod gamestate;
 mod map;
+mod objective;
 mod ui;
 
 fn main() {
