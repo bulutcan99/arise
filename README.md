@@ -21,7 +21,7 @@ Arise is a top-down survival action game where the player must endure waves of e
 
 ### 🧍 Phase 2: Core Player System
 
-- [ ] Create `Player` entity
+- [x] Create `Player` entity
 - [ ] Implement player movement
 - [ ] Add player health and damage handling
 - [ ] Add XP and leveling system
@@ -32,12 +32,9 @@ Arise is a top-down survival action game where the player must endure waves of e
 ### 🧙‍♂️ Phase 3: Class & Ability System (Inspired by Solo Leveling)
 
 - [ ] Design and define character class:
-  - [ ] Shadow Monarch
-- [ ] Implement class-specific abilities:
-  - [ ] Shadow Summoning (revive dead enemies as allies)
-  - [ ] Fireball / AoE spells
-  - [ ] Stealth or blink mechanics
-  - [ ] Rain of Arrows
+  - [x] Shadow Monarch
+- [x] Implement class-specific abilities:
+  - [x] Shadow Summoning (revive dead enemies as allies)
 - [ ] Allow class selection or class-based unlocks
 
 ---

@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::player::PlayerComponent;
+
 pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
@@ -18,7 +20,7 @@ fn setup(mut commands: Commands) {
 
 fn move_camera(
     mut camera_query: Query<&mut Transform, With<GameCamera>>,
-    player_query: Query<&Transform, With<Player>>,
+    player_query: Query<&Transform, With<PlayerComponent>>,
 ) {
     let Ok(player_transform) = player_query.get_single() else {
         return;
