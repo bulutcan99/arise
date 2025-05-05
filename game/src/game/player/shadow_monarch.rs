@@ -44,6 +44,9 @@ pub struct ShadowSummonComponent {
     /// Maximum number of active summons
     pub max_summons: u32,
 
+    /// Maximum radius that summons can go
+    pub max_radius: f32,
+
     /// How much health is inherited by the summon (0.0 to 1.0)
     pub health_percentage: f32,
 
@@ -58,6 +61,7 @@ impl From<ShadowSummonComponentData> for ShadowSummonComponent {
     fn from(data: ShadowSummonComponentData) -> Self {
         Self {
             max_summons: data.max_summons,
+            max_radius: data.max_radius,
             health_percentage: data.health_percentage,
             damage_percentage: data.damage_percentage,
             lifetime: data
@@ -72,6 +76,7 @@ impl From<ShadowSummonComponentData> for ShadowSummonComponent {
 #[derive(Deserialize, Clone, Copy, Debug)]
 pub struct ShadowSummonComponentData {
     pub max_summons: u32,
+    pub max_radius: f32,
     pub health_percentage: f32,
     pub damage_percentage: f32,
     pub duration: Option<f32>,

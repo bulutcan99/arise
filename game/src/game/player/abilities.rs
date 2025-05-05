@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use std::hash::Hash;
 
 use bevy::prelude::*;
-use bevy::render::extract_resource::ExtractResource;
 use serde::{Deserialize, Serialize};
 
 use super::shadow_monarch::{

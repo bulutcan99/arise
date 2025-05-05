@@ -22,7 +22,6 @@ use crate::game::spawnable::SpawnPosition;
 pub enum CharacterType {
     #[default]
     ShadowMonarch,
-    Figther,
 }
 
 /// High-level categories representing a character's overall strengths and weaknesses.
@@ -54,50 +53,51 @@ pub enum CharacterStatType {
 /// Inspired by games like *Vampire Survivors* and the *Solo Leveling* universe,
 /// characters may possess summoning powers, life-stealing abilities, area-of-effect attacks,
 /// and scaling projectile-based combat.
-#[derive(Deserialize, Clone)]
 pub struct Character {
     // === Meta ===
+    /// Display name of the character.
     pub name: String,
+
+    /// Type or classification of the character (e.g. Player, Boss, Minion).
     pub character_type: CharacterType,
+
+    /// Ability assigned to the first ability slot (optional).
     pub slot_1_ability: Option<SlotOneAbilityType>,
+
+    /// Ability assigned to the second ability slot (optional).
     pub slot_2_ability: Option<SlotTwoAbilityType>,
+
+    /// Ability assigned to the third ability slot (optional).
     pub slot_3_ability: Option<SlotThreeAbilityType>,
 
     // === Offense ===
-    pub weapon_damage: usize,
-    pub weapon_critical_chance: f32,
-    pub weapon_critical_damage: f32,
-    pub projectile_speed: f32,
-    pub projectile_count: usize,
-    pub projectile_size: f32,
-    pub projectile_despawn_time: f32,
-    pub projectile_spawn_position: SpawnPosition,
-    pub area_of_effect: f32,
-    pub collision_damage: usize,
-    pub summon_damage_multiplier: f32,
+    /// Base melee damage dealt per hit.
+    pub weapon_damage: u32,
+
+    /// Number of melee attacks per second.
+    pub swing_speed: f32,
+
+    /// Maximum distance the melee attack can reach.
+    pub reach: f32,
 
     // === Defense ===
+    /// Maximum health points of the character.
     pub health: usize,
-    pub shields: usize,
-    pub shields_recharge_rate: f32,
-    pub dodge_chance: f32,
-    pub knockback_resistance: f32,
+
+    /// Percentage of damage dealt that is converted into health.
+    /// For example, 0.1 = 10% lifesteal.
     pub life_steal_percent: f32,
 
     // === Mobility ===
+    /// Acceleration vector representing how quickly the character gains speed.
     pub acceleration: Vec2,
+
+    /// Deceleration vector representing how quickly the character slows down.
     pub deceleration: Vec2,
+
+    /// Maximum movement speed in each direction.
     pub speed: Vec2,
+
+    /// Physical dimensions of the character's collision box (width, height).
     pub collider_dimensions: Vec2,
-
-    // === Growth ===
-    pub xp_gain_rate: f32,
-    pub luck: f32,
-    pub money: usize,
-
-    // === Utility ===
-    pub attraction_distance: f32,
-    pub attraction_acceleration: f32,
-    pub cooldown_multiplier: f32,
-    pub max_summons: usize,
 }
