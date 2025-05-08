@@ -1,7 +1,24 @@
+use std::env::current_dir;
+use std::fs::read_to_string;
+
 use bevy::prelude::*;
-use leafwing_input_manager::prelude::InputMap;
-use leafwing_input_manager::Actionlike;
+use leafwing_input_manager::prelude::{ActionState, InputMap};
+use leafwing_input_manager::{Actionlike, InputManagerBundle};
+use ron::from_str;
 use serde::Deserialize;
+
+/// Spawns entity to track navigation over menus
+pub fn spawn_menu_explorer_system(
+    mut commands: Commands,
+    inputs_res: Res<InputsResource>,
+) {
+    commands
+        .spawn(InputManagerBundle::<MenuAction> {
+            action_state: ActionState::default(),
+            input_map: inputs_res.menu.clone(),
+        })
+        .insert(MainMenuExplorer);
+}
 
 /// Represents the type of input device a player is using.
 #[derive(Clone, PartialEq, Debug, Copy)]
@@ -15,9 +32,8 @@ pub enum PlayerInput {
 
 /// Identifies a specific player's menu input context.
 /// Used to route input to the correct UI element in local multiplayer menus.
-/// The inner `u8` represents the player index (0–3 for 4-player support).
 #[derive(Component)]
-pub struct MenuExplorer(pub u8);
+pub struct MenuExplorer;
 
 /// Shared UI explorer for accessing global menus such as the main menu or pause screen.
 /// Only one instance should exist and it is not player-specific.
@@ -118,7 +134,7 @@ pub enum PlayerAction {
     /// Move the character to the right
     MoveRight,
 
-    /// Use the dash
+    /// Dash
     Dash,
 
     /// Use the first ability (Slot 1)
@@ -143,4 +159,37 @@ pub struct InputsResource {
 
     /// Input map for player actions when using a gamepad
     pub player_gamepad: InputMap<PlayerAction>,
+}
+
+#[derive(Deserialize)]
+pub struct InputData {
+    pub menu_keyboard: Vec<(MenuAction, KeyCode)>,
+    pub menu_gamepad: Vec<(MenuAction, GamepadButton)>,
+    pub player_keyboard: Vec<(PlayerAction, KeyCode)>,
+    pub player_gamepad: Vec<(PlayerAction, GamepadButton)>,
+    pub player_mouse: Vec<(PlayerAction, MouseButton)>,
+}
+
+impl From<InputData> for InputsResource {
+    fn from(bindings: InputData) -> Self {
+        InputsResource {
+            menu: InputMap::new(bindings.menu_keyboard)
+                .insert_multiple(bindings.menu_gamepad)
+                .to_owned(),
+            player_keyboard: InputMap::new(bindings.player_keyboard)
+                .insert_multiple(bindings.player_mouse)
+                .to_owned(),
+            player_gamepad: InputMap::new(bindings.player_gamepad),
+        }
+    }
+}
+
+pub(super) fn get_input_bindings() -> InputData {
+    // TODO: input.ron alcak sekilde duzenlencek!
+    let config_path = current_dir().unwrap().join("config");
+
+    from_str::<InputData>(
+        &read_to_string(config_path.join("input.ron")).unwrap(),
+    )
+    .unwrap()
 }

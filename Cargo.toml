@@ -107,6 +107,7 @@ log = { version = "0.4", features = [
   "release_max_level_warn",
 ] }
 ran = "2.0.1"
+ron = "0.10.0"
 rand = "0.9.1"
 rapier2d = "0.24"
 rodio = "0.20.1"

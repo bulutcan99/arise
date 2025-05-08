@@ -404,6 +404,7 @@ dependencies = [
  "rand 0.9.1",
  "rapier2d",
  "rodio 0.20.1",
+ "ron 0.10.1",
  "serde",
  "serde_with",
  "smallvec",
@@ -759,7 +760,7 @@ dependencies = [
  "downcast-rs 1.2.1",
  "either",
  "petgraph",
- "ron",
+ "ron 0.8.1",
  "serde",
  "smallvec",
  "thread_local",
@@ -843,7 +844,7 @@ dependencies = [
  "futures-lite",
  "js-sys",
  "parking_lot",
- "ron",
+ "ron 0.8.1",
  "serde",
  "thiserror 1.0.69",
  "wasm-bindgen",
@@ -874,7 +875,7 @@ dependencies = [
  "futures-lite",
  "js-sys",
  "parking_lot",
- "ron",
+ "ron 0.8.1",
  "serde",
  "thiserror 1.0.69",
  "uuid",
@@ -911,7 +912,7 @@ dependencies = [
  "futures-lite",
  "js-sys",
  "parking_lot",
- "ron",
+ "ron 0.8.1",
  "serde",
  "stackfuture",
  "uuid",
@@ -1036,7 +1037,7 @@ checksum = "3521990269672c442f2bf0fbed0fce9db719e3dd136dd4012a97809464a4389d"
 dependencies = [
  "anyhow",
  "bevy 0.15.1",
- "ron",
+ "ron 0.8.1",
  "serde",
  "thiserror 1.0.69",
  "toml",
@@ -1562,7 +1563,7 @@ dependencies = [
  "futures-lite",
  "indexmap 2.7.1",
  "intl-memoizer",
- "ron",
+ "ron 0.8.1",
  "serde",
  "serde_yaml",
  "thiserror 1.0.69",
@@ -1704,7 +1705,7 @@ dependencies = [
  "naga_oil 0.13.0",
  "rand 0.8.5",
  "rand_pcg",
- "ron",
+ "ron 0.8.1",
  "serde",
  "thiserror 1.0.69",
  "typetag",
@@ -7484,6 +7485,19 @@ dependencies = [
  "bitflags 2.8.0",
  "serde",
  "serde_derive",
+]
+
+[[package]]
+name = "ron"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "beceb6f7bf81c73e73aeef6dd1356d9a1b2b4909e1f0fc3e59b034f9572d7b7f"
+dependencies = [
+ "base64 0.22.1",
+ "bitflags 2.8.0",
+ "serde",
+ "serde_derive",
+ "unicode-ident",
 ]
 
 [[package]]

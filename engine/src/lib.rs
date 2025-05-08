@@ -1,8 +1,13 @@
+pub mod abilities;
 pub mod animation;
 pub mod camera;
+pub mod character;
 pub mod character_selection;
 pub mod development;
+pub mod health;
 pub mod input;
 pub mod map;
+pub mod objective;
 pub mod player;
+pub mod shadow_monarch;
 pub mod states;

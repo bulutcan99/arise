@@ -1,9 +1,9 @@
 use bevy::prelude::*;
 
-mod appstate;
 mod assets;
 mod camera;
 mod consts;
+mod development;
 mod game;
 mod map;
 mod objective;
@@ -17,10 +17,6 @@ fn main() {
     // Default plugins
     app.add_plugins(bevy_plugins);
     // Our plugins
-    app.add_plugins((
-        // camera::CameraPlugin,
-        assets::AssetLoaderPlugin,
-        development::DevelopmentPlugin,
-    ));
+    app.add_plugins((assets::AssetLoaderPlugin,));
     app.run();
 }
