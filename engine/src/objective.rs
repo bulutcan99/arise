@@ -1,6 +1,5 @@
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
-// Serialize'ı da ekleyelim
 
 /// Event triggered when an entity (e.g., an enemy) is defeated.
 #[derive(Event)]
