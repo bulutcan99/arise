@@ -1,5 +1,6 @@
 use bevy::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
+// Serialize'ı da ekleyelim
 
 /// Event triggered when an entity (e.g., an enemy) is defeated.
 #[derive(Event)]
@@ -14,7 +15,7 @@ pub struct PlayerDiedEvent {
 }
 
 /// Generic game objective enum. More types can be added in the future.
-#[derive(Deserialize, Clone, Debug)]
+#[derive(Deserialize, Serialize, Clone, Debug)] // Serialize eklendi
 pub enum Objective {
     Survive(SurvivalObjective),
 }
@@ -29,7 +30,8 @@ impl Objective {
 }
 
 /// Survive objective: survive for a given time while eliminating all enemies.
-#[derive(Deserialize, Clone, Debug)]
+/// The objective is won if all enemies are defeated *before* max_time is reached.
+#[derive(Deserialize, Serialize, Clone, Debug, Default)] // Serialize ve Default eklendi
 pub struct SurvivalObjective {
     /// Target time (in seconds) to survive.
     pub max_time: f32,
@@ -37,18 +39,24 @@ pub struct SurvivalObjective {
     pub total_enemies: u32,
 
     /// (Runtime) Time elapsed since the objective started.
-    #[serde(skip_serializing)]
+    /// This field is managed at runtime and should not be part of the config.
+    #[serde(skip)]
     pub elapsed: f32,
+
     /// (Runtime) Number of enemies remaining.
-    #[serde(skip_serializing)]
+    /// Initialized to `total_enemies` when the objective starts.
+    #[serde(skip)]
     pub remaining_enemies: u32,
+
     /// (Runtime) Whether the player is still alive.
-    #[serde(skip_serializing)]
+    /// Initialized to `true` when the objective starts.
+    #[serde(skip)]
     pub player_alive: bool,
 }
 
 impl SurvivalObjective {
     /// Creates a new survival objective, initializing both config and runtime fields.
+    /// This is typically called when the objective becomes active.
     pub fn new(max_time: f32, total_enemies: u32) -> Self {
         Self {
             max_time,
@@ -59,46 +67,89 @@ impl SurvivalObjective {
         }
     }
 
+    /// Call this method when the objective is deserialized and needs to be made active.
+    /// It sets the runtime fields to their initial active state.
+    pub fn activate(&mut self) {
+        self.elapsed = 0.0;
+        self.remaining_enemies = self.total_enemies;
+        self.player_alive = true;
+    }
+
     /// Advances the timer by the given delta time (in seconds).
     pub fn tick(&mut self, delta: f32) {
-        self.elapsed += delta;
+        if self.player_alive && !self.is_completed() {
+            self.elapsed += delta;
+        }
     }
 
     /// Called when an enemy is defeated, updating the remaining enemy count.
     pub fn on_enemy_defeated(&mut self) {
-        self.remaining_enemies = self.remaining_enemies.saturating_sub(1);
+        if self.player_alive {
+            self.remaining_enemies = self.remaining_enemies.saturating_sub(1);
+        }
     }
 
-    /// Called when the player dies, updating the alive flag.
+    /// Called when the event `PlayerDiedEvent` trigger player dies and update the alive flag.
     pub fn on_player_died(&mut self) {
         self.player_alive = false;
     }
 
-    /// Returns `true` if the objective has failed.
-    ///
-    /// Fails if the player dies or the timer runs out while enemies remain.
-    pub fn is_failed(&self) -> bool {
-        !self.player_alive
-            || (self.elapsed >= self.max_time && self.remaining_enemies > 0)
-    }
-
     /// Returns `true` if the objective is successfully completed.
     ///
-    /// Completes when the timer runs out and no enemies remain.
+    /// Completes if the player is alive, all enemies are eliminated,
+    /// AND the max time has NOT been reached.
     pub fn is_completed(&self) -> bool {
-        self.elapsed >= self.max_time && self.remaining_enemies == 0
+        self.player_alive
+            && self.remaining_enemies == 0
+            && self.elapsed < self.max_time
     }
 
-    /// Returns progress as a float in the range [0.0, 1.0].
+    /// Returns `true` if the objective has failed.
     ///
-    /// Combines time and enemy defeat progress equally.
+    /// Fails if the player dies, OR if the max_time is reached
+    /// (and the objective wasn't completed before that).
+    pub fn is_failed(&self) -> bool {
+        if !self.player_alive {
+            return true;
+        }
+        if self.elapsed >= self.max_time {
+            return true;
+        }
+
+        false
+    }
+
+    /// Returns a combined progress as a float in the range [0.0, 1.0].
+    ///
+    /// Represents an equally weighted combination of enemies defeated and time elapsed
+    /// relative to `max_time`. Returns 1.0 if completed, and 0.0 if failed.
     pub fn progress(&self) -> f32 {
-        let time_ratio = (self.elapsed / self.max_time).min(1.0);
-        let enemy_ratio = if self.total_enemies > 0 {
-            1.0 - (self.remaining_enemies as f32 / self.total_enemies as f32)
+        if self.is_completed() {
+            return 1.0;
+        }
+        if self.is_failed() {
+            return 0.0;
+        }
+
+        let enemy_defeat_ratio = if self.total_enemies > 0 {
+            (self.total_enemies - self.remaining_enemies) as f32
+                / self.total_enemies as f32
         } else {
             1.0
         };
-        (time_ratio + enemy_ratio) * 0.5
+
+        // Ratio of time elapsed towards max_time.
+        // This shows how much of the "allowed" time has been used.
+        let time_elapsed_ratio = (self.elapsed / self.max_time).min(1.0);
+
+        log::info!(
+            "Enemy Defeat Ratio: {}, Time Elapsed Ratio: {}",
+            enemy_defeat_ratio,
+            time_elapsed_ratio
+        );
+
+        // Combine the two ratios. Here, we take a simple average.
+        // You might want to weigh them differently based on game feel.
+        (enemy_defeat_ratio + time_elapsed_ratio) / 2.0
     }
 }
