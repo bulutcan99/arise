@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use super::shadow_monarch::{
     MonarchFormData, ShadowDashData, ShadowSummonData,
 };
+use crate::player::PlayerIDComponent;
 
 #[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]
 pub enum AbilitySlotIDComponent {
