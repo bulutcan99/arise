@@ -30,7 +30,7 @@ impl Objective {
 
 /// Survive objective: survive for a given time while eliminating all enemies.
 /// The objective is won if all enemies are defeated *before* max_time is reached.
-#[derive(Deserialize, Serialize, Clone, Debug, Default)] // Serialize ve Default eklendi
+#[derive(Deserialize, Serialize, Clone, Debug, Default)]
 pub struct SurvivalObjective {
     /// Target time (in seconds) to survive.
     pub max_time: f32,
