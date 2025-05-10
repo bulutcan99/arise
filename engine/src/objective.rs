@@ -14,7 +14,7 @@ pub struct PlayerDiedEvent {
 }
 
 /// Generic game objective enum. More types can be added in the future.
-#[derive(Deserialize, Serialize, Clone, Debug)] // Serialize eklendi
+#[derive(Deserialize, Serialize, Clone, Debug)]
 pub enum Objective {
     Survive(SurvivalObjective),
 }
