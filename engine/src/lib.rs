@@ -5,7 +5,6 @@ pub mod character_selection;
 pub mod damage;
 pub mod health;
 pub mod input;
-pub mod map;
 pub mod objective;
 pub mod player;
 pub mod run;
