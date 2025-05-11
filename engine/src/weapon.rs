@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-
 use bevy::prelude::*;
 use serde::Deserialize;
 use strum_macros::{Display, EnumString};
 
-use crate::spwanable::SpawnPosition;
+// TODO: abilities ve shadow_monarch.rs dosyalari mantigi olcak
+pub struct WeaponData {}
 
 /// The main weapon type, including subtypes for swords, daggers, and bows.
 #[derive(
@@ -19,9 +18,26 @@ use crate::spwanable::SpawnPosition;
     Copy
 )]
 pub enum WeaponType {
+    Club(ClubType),
     Sword(SwordType),
     Dagger(DaggerType),
     Bow(BowType),
+}
+
+/// Club variations used in melee combat.
+#[derive(
+    Deserialize,
+    EnumString,
+    Display,
+    Debug,
+    Hash,
+    PartialEq,
+    Eq,
+    Clone,
+    Copy
+)]
+pub enum ClubType {
+    WoodenClub,
 }
 
 /// Sword variations used in melee combat.
@@ -72,44 +88,29 @@ pub enum BowType {
     WoodenBow,
 }
 
-/// Core weapon statistics such as damage, attack speed, and attack range.
-#[derive(Debug, Clone, Reflect)]
-pub struct Weapon {
-    pub weapon_type: WeaponType,
-    pub damage: f32,
-    pub cooldown_seconds: f32,
-    pub projectile_spawn_position: SpawnPosition,
-    pub projectile_count: u32,
-    pub area_size_multiplier: f32,
-    pub projectile_speed: f32,
-    pub projectile_lifetime_seconds: f32,
-    pub pierce_count: u32,
+#[derive(Event)]
+pub struct WeaponDamageEvent {
+    pub damage: u32,
+    pub target: Entity,
 }
 
-impl Default for Weapon {
-    fn default() -> Self {
+#[derive(Component, Deserialize, Clone)]
+pub struct WeaponCooldownComponent {
+    /// Stored seperately so that it can used with the player's cooldown multiplier
+    /// to set the duration of the cooldown timer
+    pub cooldown_time: f32,
+    /// Tracks a cooldown for an ability
+    pub cooldown_timer: Timer,
+}
+
+impl WeaponCooldownComponent {
+    pub fn new(cooldown_time: f32) -> Self {
         Self {
-            weapon_type: WeaponType::Sword(SwordType::Longsword),
-            damage: 10.0,
-            cooldown_seconds: 1.0,
-            projectile_count: 1,
-            projectile_spawn_position: SpawnPosition::Local(Vec2::Y),
-            area_size_multiplier: 1.0,
-            projectile_speed: 300.0,
-            projectile_lifetime_seconds: 2.0,
-            pierce_count: 0,
+            cooldown_time,
+            cooldown_timer: Timer::from_seconds(cooldown_time, TimerMode::Once),
         }
     }
 }
 
 #[derive(Resource, Deserialize)]
-pub struct WeaponResource {
-    #[serde(flatten)]
-    pub all_weapons: HashMap<String, Weapon>,
-}
-
-impl WeaponResource {
-    pub fn get_stats(&self, weapon_name: &str) -> Option<&Weapon> {
-        self.all_weapons.get(weapon_name)
-    }
-}
+pub struct WeaponsResource {}

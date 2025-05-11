@@ -9,8 +9,6 @@ use crate::abilities::shadow_monarch::{
 
 mod shadow_monarch;
 
-use crate::player::PlayerIDComponent;
-
 #[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]
 pub enum AbilitySlotIDComponent {
     One,
@@ -52,21 +50,9 @@ pub struct AbilityDescriptionsResource {
 #[derive(Event, Debug)]
 pub struct ActivateAbilityEvent {
     /// ID of the player that activated the ability
-    pub player_id: PlayerIDComponent,
+    pub player: Entity,
     /// Slot of the ability that was activated
     pub ability_slot_id: AbilitySlotIDComponent,
-}
-
-impl ActivateAbilityEvent {
-    pub fn new(
-        player_id: PlayerIDComponent,
-        ability_slot_id: AbilitySlotIDComponent,
-    ) -> Self {
-        Self {
-            player_id,
-            ability_slot_id,
-        }
-    }
 }
 
 /// Component for tracking ability cooldowns
