@@ -3,9 +3,12 @@ use std::collections::HashMap;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use super::shadow_monarch::{
+use crate::abilities::shadow_monarch::{
     MonarchFormData, ShadowDashData, ShadowSummonData,
 };
+
+mod shadow_monarch;
+
 use crate::player::PlayerIDComponent;
 
 #[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]

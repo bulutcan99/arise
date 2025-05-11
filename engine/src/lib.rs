@@ -9,5 +9,4 @@ pub mod map;
 pub mod objective;
 pub mod player;
 pub mod run;
-pub mod shadow_monarch;
 pub mod spwanable;
