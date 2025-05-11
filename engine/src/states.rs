@@ -27,7 +27,7 @@ pub enum AppStates {
     Victory,
 }
 
-/// In-game sub-states used during active gameplay.
+/// In-game substates used during active gameplay.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, States)]
 pub enum GameStates {
     /// The default state where the game is actively running.

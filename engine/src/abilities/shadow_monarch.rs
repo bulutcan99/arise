@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use serde::Deserialize;
 
-use super::abilities::{AbilityCooldownComponent, AbilitySlotIDComponent};
+use crate::abilities::{AbilityCooldownComponent, AbilitySlotIDComponent};
 
 // === Ability1 ===
 /// Bundle used for spawning the shadow summon ability entity as part of a player or system.
