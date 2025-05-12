@@ -5,6 +5,7 @@ use strum_macros::EnumIter;
 use super::abilities::{
     SlotOneAbilityType, SlotThreeAbilityType, SlotTwoAbilityType,
 };
+use crate::spwanable::SpawnPosition;
 
 /// Represents all playable character types in the game.
 ///
@@ -64,7 +65,23 @@ pub struct Character {
     /// Damage dealt when the player collides directly with an enemy.
     pub collision_damage: u32,
 
-    pub weapon: Weapon,
+    /// Base damage dealt via weapon abilities (e.g. ranged projectiles, AoEs).
+    pub weapon_damage: u32,
+
+    /// Speed at which spawned projectiles travel (units per second).
+    pub projectile_speed: f32,
+
+    /// Initial offset or direction from which projectiles spawn.
+    pub projectile_spawn_position: SpawnPosition,
+
+    /// Lifetime of a projectile in seconds before it is despawned.
+    pub projectile_despawn_time: f32,
+
+    /// Size of the projectile for rendering and collision.
+    pub projectile_size: f32,
+
+    /// Number of projectiles emitted per attack cycle.
+    pub projectile_count: u32,
 
     // === Abilities ===
     /// Assigned ability for the first active skill slot (if any).

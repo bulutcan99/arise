@@ -33,16 +33,16 @@ pub enum Faction {
 /// Contains faction to distinguish between friendly and hostile fire.
 #[derive(Deserialize, Debug, Hash, PartialEq, Eq, Clone, Display, Copy)]
 pub enum ProjectileType {
-    Melee(Faction),
-    Range(Faction),
+    Blast(Faction),
+    Bullet(Faction),
 }
 
 impl ProjectileType {
     /// Returns the faction (Ally or Enemy) of the projectile.
     pub fn get_faction(&self) -> Faction {
         match self {
-            ProjectileType::Melee(faction) => *faction,
-            ProjectileType::Range(faction) => *faction,
+            ProjectileType::Blast(faction) => faction.clone(),
+            ProjectileType::Bullet(faction) => faction.clone(),
         }
     }
 }

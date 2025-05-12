@@ -1,13 +1,8 @@
 use bevy::prelude::*;
 
-mod assets;
 mod camera;
 mod consts;
 mod development;
-mod game;
-mod map;
-mod objective;
-mod ui;
 
 fn main() {
     let mut app = App::new();
@@ -17,6 +12,5 @@ fn main() {
     // Default plugins
     app.add_plugins(bevy_plugins);
     // Our plugins
-    app.add_plugins((assets::AssetLoaderPlugin,));
     app.run();
 }

@@ -2,7 +2,7 @@ pub mod abilities;
 pub mod animation;
 pub mod character;
 pub mod character_selection;
-pub mod damage;
+pub mod collision;
 pub mod health;
 pub mod input;
 pub mod objective;
