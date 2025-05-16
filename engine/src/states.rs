@@ -2,7 +2,7 @@ use bevy::prelude::{Component, States};
 
 /// High-level application state machine.
 /// Controls which screen or phase the player is currently in.
-#[derive(Debug, Clone, PartialEq, Eq, Hash, Default, States)]
+#[derive(Clone, Eq, PartialEq, Debug, Hash, Default, States)]
 pub enum AppStates {
     /// Initial state where assets are being loaded (e.g. textures, sounds).
     #[default]
