@@ -1,7 +1,7 @@
 use arise_engine::states::AppStates;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use player::PlayerAssetLoaderPlugin;
+use player::asset::PlayerAssetLoaderPlugin;
 use states::AssetLoaderPlugin;
 
 mod animation;
@@ -23,7 +23,7 @@ fn main() {
     app.init_state::<AppStates>();
     // Our plugins
     app.add_plugins((
-        AssetLoaderPlugin,
+        // AssetLoaderPlugin,
         PlayerAssetLoaderPlugin,
     ));
     app.run();

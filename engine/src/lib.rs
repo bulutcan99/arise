@@ -1,5 +1,6 @@
 pub mod abilities;
 pub mod animation;
+pub mod assets;
 pub mod character;
 pub mod character_selection;
 pub mod collision;

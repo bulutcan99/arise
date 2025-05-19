@@ -57,6 +57,7 @@ bevy = { version = "0.15.0", default-features = true, features = [
   "flac",
   "jpeg",
   "wayland",
+  "bevy_sprite",
   "bevy_dev_tools",
   "serialize",
   # Part of bevy's default features
