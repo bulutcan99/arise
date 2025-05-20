@@ -1,5 +1,5 @@
-use arise_engine::player::PlayerComponent;
 use bevy::prelude::*;
+use engine::player::PlayerComponent;
 
 pub struct CameraPlugin;
 

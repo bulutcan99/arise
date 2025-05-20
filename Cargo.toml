@@ -7,6 +7,12 @@ publish = false
 exclude = ["dist", "build", "assets", "credits"]
 
 # -----------------------------------------------------------------------------
+# Targets
+# -----------------------------------------------------------------------------
+# Binary crate olarak ana hedef: src/main.rs
+# Bu yüzden ek bir [bin] bölümü tanımlamaya gerek yok
+
+# -----------------------------------------------------------------------------
 # Profiles
 # -----------------------------------------------------------------------------
 
@@ -19,7 +25,6 @@ debug = false
 lto = false
 codegen-units = 1
 
-# For bevy-rapier2d
 [profile.release]
 opt-level = "s"
 lto = true
@@ -28,18 +33,14 @@ strip = true
 debug = false
 
 # -----------------------------------------------------------------------------
-# Distribution profile (Optional: if using cargo-dist or similar)
+# Workspace
 # -----------------------------------------------------------------------------
-# [profile.dist]
-# inherits = "release"
-# opt-level = 3
-# lto = true
-# codegen-units = 1
-# strip = true
 
 [workspace]
 members = [
-    "crates/assets", "crates/engine", "crates/storage"
+    "crates/assets",
+    "crates/engine",
+    "crates/storage"
 ]
 
 # -----------------------------------------------------------------------------
@@ -47,15 +48,42 @@ members = [
 # -----------------------------------------------------------------------------
 
 [workspace.dependencies]
-assets = { path = "crates/assets" }
+serde = "1.0.159"
+strum = "0.25.0"
+strum_macros = "0.25.1"
+thiserror = "1.0"
+derive_more = "0.99.17"
+bevy_ecs_macros = "0.15.0"
+bevy_ecs = "0.15.0"
+bevy_reflect = "0.15.0"
+bevy_input = "0.15.0"
+bevy_state = "0.15.0"
+bevy_kira_audio = { version = "0.20.0", features = ["mp3", "wav"] }
+leafwing-input-manager = { version = "0.16.0", features = [
+    "mouse",
+    "keyboard",
+] }
+ron = "0.10.0"
+bevy_time = "0.15.0"
+bevy_math = "0.15.0"
+# We value minimizing the binary sizes and keeping the CLI maximally simple over a more feature complete CLI library
+# like clap.
+argh = "0.1.12"
+rand = "0.8.5"
+console_error_panic_hook = "0.1.7"
+bevy_asset_loader = { version = "0.22.0", features = [
+    "2d",
+    "3d",
+    "standard_dynamic_assets",
+] }
 engine = { path = "crates/engine" }
-anyhow = "1.0.79"
-bevy = { version = "0.15.0", default-features = true, features = [
-    "flac",
-    "jpeg",
-    "wayland",
-    "bevy_sprite",
-    "bevy_dev_tools",
+
+
+[workspace.dependencies.bevy]
+version = "0.15.0"
+default-features = false
+features = [
+    # Non-default/'extra' features features
     "serialize",
     # Part of bevy's default features
     "animation",
@@ -80,61 +108,39 @@ bevy = { version = "0.15.0", default-features = true, features = [
     "bevy_gizmos",
     "webgl2",
     "zstd",
+]
+
+[dev-dependencies]
+rstest = "0.18.2"
+assert_cmd = "2.0.12"
+
+
+[dependencies]
+bevy = { workspace = true }
+bevy_rapier2d = { version = "0.28.0", features = [
+    "simd-stable",
+    "debug-render-2d",
 ] }
-bevy_asset_loader = { version = "0.22.0", features = ["2d"] }
-leafwing-input-manager = { version = "0.16.0", features = [
-    "mouse",
-    "keyboard",
-] }
-bevy_ecs_tilemap = { version = "0.15.0", features = ["serde"] }
-bevy_common_assets = { version = "0.12", features = ["toml", "ron"] }
-bevy_ecs_ldtk = "0.11.0"
-bevy_egui = "0.33"
-bevy-inspector-egui = "0.30"
-bevy_fluent = "0.11.0"
-bevy_kira_audio = { version = "0.22.0", features = ["android_shared_stdcxx"] }
-bevy_sprite3d = "4.0.0"
-cpal = "0.15.3"
-directories = "6.0.0"
-enum-iterator = "2.1.0"
-enum-map = "2.7.3"
-fluent_content = "0.0.5"
-glam = "0.30.2"
-log = { version = "0.4", features = [
-    "max_level_debug",
-    "release_max_level_warn",
-] }
-ran = "2.0.1"
-ron = "0.10.0"
-rand = "0.9.1"
-rapier2d = "0.24"
-rodio = "0.20.1"
-serde = { version = "1.0", features = ["derive"] }
-serde_with = "3.6.1"
-strum = "0.27.1"
-strum_macros = "0.27.1"
-thiserror = "2.0.12"
-toml = "0.8.10"
-unic-langid = "0.9.4"
-webbrowser = { version = "1", features = ["hardened"] }
-winit = { version = "0.30", default-features = false }
-bevy_hanabi = { git = "https://github.com/djeedai/bevy_hanabi", rev = "cabb3cb", default-features = false, features = [
-    "3d",
-] }
-bevy_editor_pls = "0.10.0"
-bevy_prototype_lyon = "0.13.0"
-iyes_perf_ui = "0.4.0"
-console_error_panic_hook = "0.1.7"
-argh = "0.1.12"
+bevy_asset_loader = { workspace = true }
+serde = { workspace = true }
+strum = { workspace = true }
+strum_macros = { workspace = true }
+ron = { workspace = true }
+rand = { workspace = true }
+bevy_kira_audio = { workspace = true }
+winit = "0.30.3"
+image = "0.24.6"
+thiserror = { workspace = true }
+leafwing-input-manager = { workspace = true }
+engine = { workspace = true }
+assets = { path = "crates/assets" }
+
 
 
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 storage = { path = "crates/storage", optional = true }
-argh = { workspace = true, optional = true }
 
-[target.'cfg(target_arch = "wasm32")'.dependencies]
-console_error_panic_hook = { workspace = true }
 # -----------------------------------------------------------------------------
 # Build Dependencies
 # -----------------------------------------------------------------------------
@@ -150,8 +156,3 @@ smallvec = "1.13.2"
 
 [lints.clippy]
 type_complexity = "allow"
-
-
-[features]
-storage = ["storage"]
-cli = ["argh"]

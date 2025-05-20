@@ -51,7 +51,11 @@ pub fn animate_sprite_system(
     time: Res<Time>,
     texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
     mut animation_complete_event_writer: EventWriter<AnimationCompletedEvent>,
-    mut query: Query<(Entity, &mut AnimationComponent, &mut Sprite)>,
+    mut query: Query<(
+        Entity,
+        &mut AnimationComponent,
+        &mut Sprite,
+    )>,
 ) {
     for (entity, mut anim, mut sprite) in query.iter_mut() {
         if let Some(atlas) = &mut sprite.texture_atlas {
@@ -60,34 +64,38 @@ pub fn animate_sprite_system(
                 continue;
             }
 
-            if let Some(layout) = texture_atlas_layouts.get(&atlas.layout.id()) {
+            if let Some(layout) = texture_atlas_layouts.get(&atlas.layout.id())
+            {
                 let num_frames = layout.len();
 
                 match &mut anim.direction {
-                    AnimationDirection::None => {}
+                    AnimationDirection::None => {},
                     AnimationDirection::Forward => {
                         let new_idx = (atlas.index + 1) % num_frames;
                         if new_idx == 0 {
-                            animation_complete_event_writer.send(AnimationCompletedEvent(entity));
+                            animation_complete_event_writer
+                                .send(AnimationCompletedEvent(entity));
                         }
                         atlas.index = new_idx;
-                    }
-                    AnimationDirection::PingPong(direction) => match direction {
-                        PingPongDirection::Forward => {
-                            if atlas.index >= num_frames - 1 {
-                                *direction = PingPongDirection::Backward;
-                                atlas.index = num_frames.saturating_sub(2);
-                            } else {
-                                atlas.index += 1;
-                            }
-                        }
-                        PingPongDirection::Backward => {
-                            if atlas.index == 0 {
-                                *direction = PingPongDirection::Forward;
-                                atlas.index = 1;
-                            } else {
-                                atlas.index -= 1;
-                            }
+                    },
+                    AnimationDirection::PingPong(direction) => {
+                        match direction {
+                            PingPongDirection::Forward => {
+                                if atlas.index >= num_frames - 1 {
+                                    *direction = PingPongDirection::Backward;
+                                    atlas.index = num_frames.saturating_sub(2);
+                                } else {
+                                    atlas.index += 1;
+                                }
+                            },
+                            PingPongDirection::Backward => {
+                                if atlas.index == 0 {
+                                    *direction = PingPongDirection::Forward;
+                                    atlas.index = 1;
+                                } else {
+                                    atlas.index -= 1;
+                                }
+                            },
                         }
                     },
                 }
