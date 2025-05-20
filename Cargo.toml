@@ -6,9 +6,6 @@ authors = ["Bulut Gocer <gocerbulutcan@gmail.com>"]
 publish = false
 exclude = ["dist", "build", "assets", "credits"]
 
-[features]
-dev = ["bevy/dynamic_linking"]
-
 # -----------------------------------------------------------------------------
 # Profiles
 # -----------------------------------------------------------------------------
@@ -20,8 +17,9 @@ opt-level = 3
 opt-level = 1
 debug = false
 lto = false
-#codegen-units = 8
+codegen-units = 1
 
+# For bevy-rapier2d
 [profile.release]
 opt-level = "s"
 lto = true
@@ -39,55 +37,54 @@ debug = false
 # codegen-units = 1
 # strip = true
 
-[lib]
-name = "arise_engine"
-path = "engine/src/lib.rs"
-
-[[bin]]
-name = "arise_game"
-path = "game/src/main.rs"
+[workspace]
+members = [
+    "crates/assets", "crates/engine", "crates/storage"
+]
 
 # -----------------------------------------------------------------------------
 # Dependencies
 # -----------------------------------------------------------------------------
 
-[dependencies]
+[workspace.dependencies]
+assets = { path = "crates/assets" }
+engine = { path = "crates/engine" }
 anyhow = "1.0.79"
 bevy = { version = "0.15.0", default-features = true, features = [
-  "flac",
-  "jpeg",
-  "wayland",
-  "bevy_sprite",
-  "bevy_dev_tools",
-  "serialize",
-  # Part of bevy's default features
-  "animation",
-  "bevy_asset",
-  "bevy_audio",
-  "bevy_gilrs",
-  "bevy_scene",
-  "bevy_winit",
-  "bevy_core_pipeline",
-  "bevy_pbr",
-  "bevy_gltf",
-  "bevy_render",
-  "bevy_sprite",
-  "bevy_text",
-  "bevy_ui",
-  "hdr",
-  "ktx2",
-  "tonemapping_luts",
-  "multi_threaded",
-  "png",
-  "x11",
-  "bevy_gizmos",
-  "webgl2",
-  "zstd",
+    "flac",
+    "jpeg",
+    "wayland",
+    "bevy_sprite",
+    "bevy_dev_tools",
+    "serialize",
+    # Part of bevy's default features
+    "animation",
+    "bevy_asset",
+    "bevy_audio",
+    "bevy_gilrs",
+    "bevy_scene",
+    "bevy_winit",
+    "bevy_core_pipeline",
+    "bevy_pbr",
+    "bevy_gltf",
+    "bevy_render",
+    "bevy_sprite",
+    "bevy_text",
+    "bevy_ui",
+    "hdr",
+    "ktx2",
+    "tonemapping_luts",
+    "multi_threaded",
+    "png",
+    "x11",
+    "bevy_gizmos",
+    "webgl2",
+    "zstd",
 ] }
 bevy_asset_loader = { version = "0.22.0", features = ["2d"] }
 leafwing-input-manager = { version = "0.16.0", features = [
-  "mouse",
-  "keyboard",
+    "mouse",
+    "keyboard",
 ] }
 bevy_ecs_tilemap = { version = "0.15.0", features = ["serde"] }
 bevy_common_assets = { version = "0.12", features = ["toml", "ron"] }
@@ -104,8 +101,8 @@ enum-map = "2.7.3"
 fluent_content = "0.0.5"
 glam = "0.30.2"
 log = { version = "0.4", features = [
-  "max_level_debug",
-  "release_max_level_warn",
+    "max_level_debug",
+    "release_max_level_warn",
 ] }
 ran = "2.0.1"
 ron = "0.10.0"
@@ -122,12 +119,22 @@ unic-langid = "0.9.4"
 webbrowser = { version = "1", features = ["hardened"] }
 winit = { version = "0.30", default-features = false }
 bevy_hanabi = { git = "https://github.com/djeedai/bevy_hanabi", rev = "cabb3cb", default-features = false, features = [
-  "3d",
+    "3d",
 ] }
 bevy_editor_pls = "0.10.0"
 bevy_prototype_lyon = "0.13.0"
 iyes_perf_ui = "0.4.0"
+console_error_panic_hook = "0.1.7"
+argh = "0.1.12"
 
+
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+storage = { path = "crates/storage", optional = true }
+argh = { workspace = true, optional = true }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = { workspace = true }
 # -----------------------------------------------------------------------------
 # Build Dependencies
 # -----------------------------------------------------------------------------
@@ -143,3 +150,8 @@ smallvec = "1.13.2"
 
 [lints.clippy]
 type_complexity = "allow"
+
+
+[features]
+storage = ["storage"]
+cli = ["argh"]

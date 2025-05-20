@@ -1,0 +1,12 @@
+[package]
+name = "assets"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rand = { workspace = true }
+bevy_kira_audio = { workspace = true }
+bevy_asset_loader = { workspace = true }
+engine = { workspace = true }
+# required due to bevy_asset_loader expecting bevy to be imported
+bevy = { workspace = true }
