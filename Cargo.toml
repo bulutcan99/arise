@@ -108,6 +108,7 @@ features = [
     "bevy_gizmos",
     "webgl2",
     "zstd",
+    "bevy_dev_tools"
 ]
 
 [dev-dependencies]
@@ -121,6 +122,7 @@ bevy_rapier2d = { version = "0.28.0", features = [
     "simd-stable",
     "debug-render-2d",
 ] }
+bevy-inspector-egui = { version = "0.30" }
 bevy_asset_loader = { workspace = true }
 serde = { workspace = true }
 strum = { workspace = true }

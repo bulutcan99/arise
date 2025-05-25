@@ -1,30 +1,29 @@
-use arise_engine::states::AppStates;
+use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use player::asset::PlayerAssetLoaderPlugin;
-use states::AssetLoaderPlugin;
+use settings::display::DisplayConfig;
 
 mod animation;
-mod asset;
 mod camera;
 mod consts;
 mod development;
 mod player;
+mod settings;
 mod states;
 
-// TODO: ortak animation ve ortak assetler icin bir yapi! sonrasinda pink monster hareketlendirme!
-fn main() {
-    let mut app = App::new();
-    app.insert_resource(ClearColor(Color::srgb_u8(1, 50, 45)));
-    let bevy_plugins = DefaultPlugins;
-    let bevy_plugins = bevy_plugins.set(ImagePlugin::default_nearest());
-    // Default plugins
-    app.add_plugins(bevy_plugins);
-    app.init_state::<AppStates>();
-    // Our plugins
-    app.add_plugins((
-        // AssetLoaderPlugin,
-        PlayerAssetLoaderPlugin,
-    ));
-    app.run();
+fn main() {}
+
+// TODO: After some time player will set display!
+fn set_display_config() -> DisplayConfig {
+    DisplayConfig::new();
+}
+
+fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {}
+
+fn custom_plugins() -> PluginGroupBuilder {}
+
+fn build_app<P1: PluginGroup, P2: PluginGroup>(
+    default_plugins: P1,
+    custom_plugins: P2,
+) -> App {
 }

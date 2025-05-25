@@ -2,67 +2,32 @@ use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 
 // -----------------------------------------------------------------------------
-// Shadow Player Animation Assets: Run
+// Shadow Player Animation Assets: Combined
 // -----------------------------------------------------------------------------
 
-/// Asset collection for the shadow player's run animation.
+/// Asset collection for all shadow player animations (run and walk).
 #[derive(AssetCollection, Resource)]
-pub struct PlayerShadowRunAsset {
-    /// The texture atlas layout used for the run animation (8 frames, 128x128 each).
-    #[asset(texture_atlas_layout(
-        tile_size_x = 128,
-        tile_size_y = 128,
-        columns = 8,
-        rows = 1,
-        padding_x = 0,
-        padding_y = 0,
-        offset_x = 0,
-        offset_y = 0
-    ))]
-    pub layout: Handle<TextureAtlasLayout>,
+pub struct PlayerShadowAnimations {
+	// --- Walk Animation ---
 
-    /// The image for the shadow player's run animation.
-    #[asset(image(sampler(filter = nearest)))]
-    #[asset(path = "texture/player/shadow/Run.png")]
-    pub image: Handle<Image>,
-}
+	/// The texture atlas layout used for the walk animation (8 frames, 128x128 each).
+	#[asset(key = "shadow.walk.layout")]
+	pub walk_layout: Handle<TextureAtlasLayout>,
 
-// -----------------------------------------------------------------------------
-// Shadow Player Animation Assets: Walk
-// -----------------------------------------------------------------------------
+	/// The image for the shadow player's walk animation.
+	#[asset(image(sampler(filter = nearest)))]
+	#[asset(key = "shadow.walk.image")]
+	pub walk_image: Handle<Image>,
 
-/// Asset collection for the shadow player's walk animation.
-#[derive(AssetCollection, Resource)]
-pub struct PlayerShadowWalkAsset {
-    /// The texture atlas layout used for the walk animation (8 frames, 128x128 each).
-    #[asset(texture_atlas_layout(
-        tile_size_x = 128,
-        tile_size_y = 128,
-        columns = 8,
-        rows = 1,
-        padding_x = 0,
-        padding_y = 0,
-        offset_x = 0,
-        offset_y = 0
-    ))]
-    pub layout: Handle<TextureAtlasLayout>,
+	// --- Run Animation ---
 
-    /// The image for the shadow player's walk animation.
-    #[asset(image(sampler(filter = nearest)))]
-    #[asset(path = "texture/player/shadow/Walk.png")]
-    pub image: Handle<Image>,
-}
+	/// The texture atlas layout used for the run animation (8 frames, 128x128 each).
+	#[asset(key = "shadow.run.layout")]
+	pub run_layout: Handle<TextureAtlasLayout>,
 
-// -----------------------------------------------------------------------------
-// Combined Shadow Animation Assets
-// -----------------------------------------------------------------------------
+	/// The image for the shadow player's run animation.
+	#[asset(image(sampler(filter = nearest)))]
+	#[asset(key = "shadow.run.image")]
+	pub run_image: Handle<Image>,
 
-/// Container for all animations related to the shadow player.
-#[derive(Resource)]
-pub struct PlayerShadowAssets {
-    /// Shadow run animation assets.
-    pub run: PlayerShadowRunAsset,
-
-    /// Shadow walk animation assets.
-    pub walk: PlayerShadowWalkAsset,
 }
