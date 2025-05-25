@@ -5,19 +5,19 @@ pub struct CameraPlugin;
 
 impl Plugin for CameraPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, setup)
-            .add_systems(PostUpdate, move_camera);
+        app.add_systems(Startup, setup_camera);
+        app.add_systems(PostUpdate, camera_follow_player);
     }
 }
 
 #[derive(Component)]
 pub struct GameCamera;
 
-fn setup(mut commands: Commands) {
+fn setup_camera(mut commands: Commands) {
     commands.spawn((Camera2d, GameCamera));
 }
 
-fn move_camera(
+fn camera_follow_player(
     mut camera_query: Query<&mut Transform, With<GameCamera>>,
     player_query: Query<&Transform, With<PlayerComponent>>,
 ) {

@@ -1,24 +1,34 @@
 use bevy::app::PluginGroupBuilder;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
-use settings::display::DisplayConfig;
+use options::display::DisplayConfig;
 
 mod animation;
 mod camera;
 mod consts;
 mod development;
+mod game;
+mod options;
 mod player;
-mod settings;
+mod plugins;
 mod states;
+mod ui;
 
 fn main() {}
 
 // TODO: After some time player will set display!
 fn set_display_config() -> DisplayConfig {
-    DisplayConfig::new();
+    DisplayConfig::new()
 }
 
-fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {}
+fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
+    DefaultPlugins
+        .set(WindowPlugin {
+            primary_window: Some(Window::from(display)),
+            ..Default::default()
+        })
+        .set(ImagePlugin::default_nearest())
+}
 
 fn custom_plugins() -> PluginGroupBuilder {}
 
