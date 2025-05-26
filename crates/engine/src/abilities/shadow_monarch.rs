@@ -85,6 +85,7 @@ pub struct ShadowSummonComponentData {
 // === Ability2 ===
 /// Bundle used to spawn and configure a dash ability entity.
 /// Includes metadata like cooldown and slot assignment.
+#[derive(Bundle, Clone)]
 pub struct ShadowDashBundle {
     /// Which ability slot this ability occupies (e.g., Slot1, Slot2).
     pub slot: AbilitySlotIDComponent,
@@ -115,7 +116,7 @@ pub struct ShadowDashData {
 
 /// Component representing the active dash state of a shadow entity.
 /// Applies a temporary movement boost in a specified direction.
-#[derive(Component)]
+#[derive(Component, Clone)]
 pub struct ShadowDashComponent {
     /// Duration (in seconds) the dash effect lasts.
     pub duration: f32,
@@ -147,6 +148,7 @@ pub struct ShadowDashComponentData {
 // === Ability3 ===
 /// Bundle used to spawn a `MonarchForm` ability entity.
 /// Combines slot, cooldown tracking, and the core behavior component.
+#[derive(Bundle, Clone)]
 pub struct MonarchFormBundle {
     /// Which ability slot this form occupies.
     pub slot: AbilitySlotIDComponent,

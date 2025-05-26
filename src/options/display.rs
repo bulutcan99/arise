@@ -1,4 +1,4 @@
-use bevy::window::{Window, WindowMode};
+use bevy::window::{MonitorSelection, Window, WindowMode, WindowResolution};
 
 pub struct DisplayConfig {
     width: f32,
@@ -19,16 +19,6 @@ impl DisplayConfig {
 impl From<DisplayConfig> for Window {
     fn from(value: DisplayConfig) -> Self {
         Window {
-            titlebar_show_title: "ARISE".to_string(),
-            resolution: (value.width, value.height).into(),
-            resizable: true,
-            mode: if value.fullscreen {
-                return WindowMode::BorderlessFullscreen(
-                    bevy::window::MonitorSelection::Primary,
-                );
-            } else {
-                return WindowMode::Windowed;
-            },
             ..Default::default()
         }
     }

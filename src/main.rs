@@ -29,11 +29,11 @@ fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
         })
         .set(ImagePlugin::default_nearest())
 }
-
-fn custom_plugins() -> PluginGroupBuilder {}
-
-fn build_app<P1: PluginGroup, P2: PluginGroup>(
-    default_plugins: P1,
-    custom_plugins: P2,
-) -> App {
-}
+// ()
+// fn custom_plugins() -> PluginGroupBuilder {}
+//
+// fn build_app<P1: PluginGroup, P2: PluginGroup>(
+// default_plugins: P1,
+// custom_plugins: P2,
+// ) -> App {
+// }

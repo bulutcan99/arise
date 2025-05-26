@@ -7,7 +7,7 @@ use crate::abilities::shadow_monarch::{
     MonarchFormData, ShadowDashData, ShadowSummonData,
 };
 
-mod shadow_monarch;
+pub mod shadow_monarch;
 
 #[derive(Component, Deserialize, Clone, Copy, PartialEq, Debug)]
 pub enum AbilitySlotIDComponent {

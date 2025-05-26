@@ -1,5 +1,5 @@
-use bevy::prelude::*
-use serde::Deserialize; :
+use bevy::prelude::*;
+use serde::Deserialize;
 
 #[derive(Resource, Deserialize)]
 pub struct GameResource {
@@ -20,8 +20,8 @@ pub struct GameResource {
     max_players: u8,
 }
 
-impl GameResource{
-    pub fn get_max_player(&self) -> u8{
+impl GameResource {
+    pub fn get_max_player(&self) -> u8 {
         self.max_players
     }
 }
