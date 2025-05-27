@@ -8,7 +8,7 @@ use crate::spwanable::SpawnPosition;
 #[derive(Resource, Debug, Default)]
 pub struct PlayersResource {
     /// List of player slots. A slot is `Some(PlayerData)` if a player has joined, `None` otherwise.
-    pub player_data: Vec<Option<PlayerData>>,
+    pub player_data: [Option<PlayerData>; 2],
 }
 
 impl PlayersResource {

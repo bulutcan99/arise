@@ -11,11 +11,30 @@ use bevy::state::condition::in_state;
 use bevy::time::{Time, Timer};
 use engine::animation::AnimationCompletedEvent;
 use serde::Deserialize;
+use engine::states;
 
 pub struct SpriteAnimationPlugin;
 
 impl Plugin for SpriteAnimationPlugin {
-	fn build(&self, app: &mut App) {}
+	fn build(&self, app: &mut App) {
+		app.add_systems(
+			Update,
+			animate_sprite_system
+				.run_if(in_state(states::AppStates::Game))
+				.run_if(in_state(states::GameStates::Playing)),
+		);
+
+		app.add_event::<AnimationCompletedEvent>();
+	}
+}
+
+/// A tag on entities that need to be animated
+#[derive(Component)]
+pub struct AnimationComponent {
+	/// Timer to track frame duration,
+	pub timer: Timer,
+	/// Direction of the animation
+	pub direction: AnimationDirection,
 }
 
 #[derive(Deserialize, Clone)]
@@ -36,15 +55,6 @@ pub enum PingPongDirection {
 pub struct AnimationData {
 	pub direction: AnimationDirection,
 	pub frame_duration: f32,
-}
-
-/// A tag on entities that need to be animated
-#[derive(Component)]
-pub struct AnimationComponent {
-	/// Timer to track frame duration,
-	pub timer: Timer,
-	/// Direction of the animation
-	pub direction: AnimationDirection,
 }
 
 pub fn animate_sprite_system(

@@ -1,4 +1,4 @@
-use assets::player::shadow::PlayerShadowAnimations;
+use assets::player::shadow::PlayerShadowAssets;
 use bevy::prelude::{
 	App
 	, IntoSystemSetConfigs, OnEnter,
@@ -19,7 +19,7 @@ impl Plugin for StatesPlugin {
 				.with_dynamic_assets_file::<StandardDynamicAssetCollection>(
 					"shadow_assets.assets.ron",
 				)
-				.load_collection::<PlayerShadowAnimations>(),
+				.load_collection::<PlayerShadowAssets>(),
 		);
 
 		/// Configure the system sets that must run in order when entering the Game state.
