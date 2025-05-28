@@ -136,6 +136,7 @@ thiserror = { workspace = true }
 leafwing-input-manager = { workspace = true }
 engine = { workspace = true }
 assets = { path = "crates/assets" }
+log = "0.4.25"
 
 
 

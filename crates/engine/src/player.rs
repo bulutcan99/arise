@@ -40,6 +40,24 @@ pub struct PlayerBundle {
     incoming_damage: PlayerIncomingDamageComponent,
 }
 
+impl PlayerBundle {
+    pub fn with_id(self, id: PlayerIDComponent) -> Self {
+        Self { id, ..self }
+    }
+}
+
+impl From<&Character> for PlayerBundle {
+    fn from(character: &Character) -> Self {
+        Self {
+            id: PlayerIDComponent::One,
+            movement: character.into(),
+            outgoing_damage: character.into(),
+            incoming_damage: PlayerIncomingDamageComponent::default(),
+            flag: PlayerComponent,
+        }
+    }
+}
+
 /// Uniquely identifies a player for logic/UI syncing purposes.
 #[derive(Component, Clone, Copy, PartialEq, Debug)]
 pub enum PlayerIDComponent {

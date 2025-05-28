@@ -4,6 +4,6 @@ use serde::Deserialize;
 use engine::character::{Character, CharacterType};
 
 #[derive(Resource, Deserialize)]
-pub struct CharacterResource {
+pub struct CharactersResource {
     pub characters: HashMap<CharacterType, Character>,
 }

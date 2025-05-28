@@ -5,7 +5,7 @@ use bevy::ecs::entity::Entity;
 use bevy::ecs::event::EventWriter;
 use bevy::ecs::schedule::IntoSystemConfigs;
 use bevy::ecs::system::{Query, Res};
-use bevy::prelude::error;
+use bevy::prelude::{error, Resource};
 use bevy::sprite::{Sprite, TextureAtlas, TextureAtlasLayout};
 use bevy::state::condition::in_state;
 use bevy::time::{Time, Timer};
@@ -51,7 +51,8 @@ pub enum PingPongDirection {
 }
 
 /// Describes an animation
-#[derive(Deserialize)]
+// TODO*: animation frame'i butun animationlar icin dynamic collection yapip animation'da calistirip burda res olarak cagir
+#[derive(Resource, Deserialize)]
 pub struct AnimationData {
 	pub direction: AnimationDirection,
 	pub frame_duration: f32,

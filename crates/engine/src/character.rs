@@ -113,4 +113,7 @@ pub struct Character {
 
     /// Physical size used in collision detection (width, height).
     pub collider_dimensions: Vec2,
+
+    /// Density of the collider (mass of collider is proportional to its size)
+    pub collider_density: f32,
 }

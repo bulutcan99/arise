@@ -311,6 +311,7 @@ dependencies = [
  "engine",
  "image 0.24.9",
  "leafwing-input-manager",
+ "log",
  "num_cpus",
  "rand 0.8.5",
  "ron 0.10.1",

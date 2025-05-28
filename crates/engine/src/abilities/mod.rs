@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 use crate::abilities::shadow_monarch::{
     MonarchFormData, ShadowDashData, ShadowSummonData,
 };
+use crate::player::PlayerIDComponent;
 
 pub mod shadow_monarch;
 
@@ -50,9 +51,18 @@ pub struct AbilityDescriptionsResource {
 #[derive(Event, Debug)]
 pub struct ActivateAbilityEvent {
     /// ID of the player that activated the ability
-    pub player: Entity,
+    pub player_id: PlayerIDComponent,
     /// Slot of the ability that was activated
     pub ability_slot_id: AbilitySlotIDComponent,
+}
+
+impl ActivateAbilityEvent {
+    pub fn new(player_id: PlayerIDComponent, ability_slot_id: AbilitySlotIDComponent) -> Self {
+        Self {
+            player_id,
+            ability_slot_id,
+        }
+    }
 }
 
 /// Component for tracking ability cooldowns
