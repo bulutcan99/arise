@@ -3,7 +3,7 @@ use bevy_rapier2d::plugin::{NoUserData, RapierPhysicsPlugin};
 
 use crate::game::{self, counters};
 use crate::options::PHYSICS_PIXELS_PER_METER;
-use crate::{animation, camera, development, states};
+use crate::{player, states, dev, animation, camera, combat};
 
 pub struct ArisePlugins;
 
@@ -16,15 +16,17 @@ impl PluginGroup for ArisePlugins {
                 RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
                     PHYSICS_PIXELS_PER_METER,
                 )
-                .in_fixed_schedule(),
+                    .in_fixed_schedule(),
             )
             .add(states::StatesPlugin)
-            .add(development::DevelopmentPlugin)
+            .add(dev::DevelopmentPlugin)
             .add(animation::SpriteAnimationPlugin)
             .add(game::GameResourcePlugin)
             .add(counters::CounterPlugin)
-            .add(camera::CameraPlugin);
+            .add(camera::CameraPlugin)
+            .add(combat::CombatPlugin)
+            .add(player::PlayerPlugin);
 
-        return res;
+        res
     }
 }

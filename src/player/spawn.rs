@@ -14,9 +14,9 @@ use engine::abilities::{
 };
 use engine::input::{InputsResource, PlayerAction, PlayerInput};
 use engine::player::{PlayerBundle, PlayerIDComponent, PlayersResource};
-use engine::health::HealthComponent;
+use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::states::GameCleanup;
-use crate::animation::{AnimationComponent, AnimationDirection};
+use crate::r#mod::{AnimationComponent, AnimationDirection};
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
 
@@ -154,6 +154,7 @@ pub fn spawn_player_system(
         .insert(Restitution::new(1.0))
         .insert(ColliderMassProperties::Density(char.collider_density))
         .insert(HealthComponent::from(char))
+        .insert(HealthRegainComponent::default())
         .insert(GameCleanup)
         .insert(ActiveEvents::COLLISION_EVENTS)
         .insert(ExternalImpulse::default())

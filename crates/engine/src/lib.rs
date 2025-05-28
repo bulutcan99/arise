@@ -12,3 +12,4 @@ pub mod run;
 pub mod spwanable;
 pub mod states;
 pub mod weapon;
+pub mod combat;

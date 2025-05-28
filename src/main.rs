@@ -6,13 +6,14 @@ use options::display::DisplayConfig;
 mod animation;
 mod camera;
 mod consts;
-mod development;
+mod dev;
 mod game;
 mod options;
 mod player;
 mod plugins;
 mod states;
 mod ui;
+mod combat;
 
 fn main() {}
 

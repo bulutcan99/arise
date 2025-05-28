@@ -46,7 +46,7 @@ impl Plugin for PlayerPlugin {
 
         app.add_systems(
             Update,
-            todo!()
+            todo!("Player system will add here!")
         );
 
     }

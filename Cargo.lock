@@ -2849,6 +2849,7 @@ version = "0.1.0"
 dependencies = [
  "bevy 0.15.1",
  "bevy_asset_loader",
+ "bevy_ecs_macros 0.15.3",
  "bevy_kira_audio",
  "leafwing-input-manager",
  "rand 0.8.5",
