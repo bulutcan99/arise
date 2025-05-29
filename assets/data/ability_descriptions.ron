@@ -1,10 +1,11 @@
 (
     slot_one: {
-        StandardBlast: "Fires energy blasts.",
-        StandardBullet: "Fires lead bullets.",
+        ShadowSummonData: "Summon shadow.",
     },
     slot_two: {
-        Charge: "Charge in a direction.",
-        MegaBlast: "Fires large, high damage, blasts.",
+        ShadowDashData: "Dash shadow.",
+    },
+    slot_three: {
+         MonarchFormData: "Evolve to Monarch.",
     }
 )
