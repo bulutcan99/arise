@@ -4,25 +4,25 @@ use bevy_asset_loader::prelude::*;
 use bevy_rapier2d::prelude::*;
 use engine::states::AppStates;
 use options::display::DisplayConfig;
+
 use crate::consts::SIMULATION_SCALE_FACTOR;
 use crate::game::counters;
 use crate::options::PHYSICS_PIXELS_PER_METER;
 
 mod animation;
 mod camera;
+mod combat;
 mod consts;
 mod dev;
 mod game;
 mod options;
 mod player;
-mod states;
-mod ui;
-mod combat;
 mod run;
 mod scanner;
 mod spawnable;
+mod states;
+mod ui;
 
-// TODO: **** Player'i ortala spawn olurken su an gorunmuyor ****
 fn main() {
     let display_config = set_display_config();
     let mut app = build_app(
@@ -41,7 +41,10 @@ fn set_display_config() -> DisplayConfig {
 /// Make the runnable platform-specific app. `base_plugins` describes "external dependencies"
 /// outside the scope of the game itself. These typically come from `bevy::MinimalPlugins` or
 /// `bevy::DefaultPlugins`. `game_plugins` comes from from `ThetawaveGamePlugins`.
-fn build_app<P1: PluginGroup, P2: PluginGroup>(base_plugins: P1, game_plugins: P2) -> App {
+fn build_app<P1: PluginGroup, P2: PluginGroup>(
+    base_plugins: P1,
+    game_plugins: P2,
+) -> App {
     // Should everything beside
     let mut app = App::new();
     app.add_plugins(base_plugins);
@@ -50,16 +53,11 @@ fn build_app<P1: PluginGroup, P2: PluginGroup>(base_plugins: P1, game_plugins: P
     app.insert_resource(ClearColor(Color::srgb_u8(1, 50, 45)))
         .insert_resource(AmbientLight::default());
 
-    app.add_systems(
-        OnEnter(AppStates::Game),
-        setup_physics,
-    );
     if cfg!(debug_assertions) && !cfg!(test) {
         app.add_plugins(RapierDebugRenderPlugin::default());
     }
     app
 }
-
 
 fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
     DefaultPlugins
@@ -83,12 +81,6 @@ impl PluginGroup for ArisePlugins {
         #[allow(unused_mut)]
         // Allow because we might add more platform-specific features
         let mut res = PluginGroupBuilder::start::<Self>()
-            .add(
-                RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(
-                    PHYSICS_PIXELS_PER_METER,
-                )
-                    .in_fixed_schedule(),
-            )
             .add(dev::DevelopmentPlugin)
             .add(states::StatesPlugin)
             .add(animation::SpriteAnimationPlugin)
@@ -99,12 +91,4 @@ impl PluginGroup for ArisePlugins {
 
         res
     }
-}
-
-
-fn setup_physics(mut commands: Commands, mut rapier_timestamp: ResMut<TimestepMode>) {
-    let rapier_config = RapierConfiguration::new(SIMULATION_SCALE_FACTOR);
-    commands.spawn(rapier_config);
-
-    *rapier_timestamp = TimestepMode::default();
 }

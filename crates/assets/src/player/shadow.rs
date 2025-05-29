@@ -17,4 +17,3 @@ pub struct PlayerShadowAssets {
     #[asset(key = "shadow.run.image")]
     pub run_image: Handle<Image>,
 }
-
