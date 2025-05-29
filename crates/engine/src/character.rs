@@ -53,6 +53,7 @@ pub enum CharacterStatType {
 /// and governs gameplay systems throughout a run.
 ///
 /// Inspired by games like *Vampire Survivors* and the *Solo Leveling* universe.
+#[derive(Deserialize, Clone)]
 pub struct Character {
     // === Meta ===
     /// Display name of the character (for UI and selection screen).

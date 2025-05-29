@@ -9,36 +9,42 @@ impl Plugin for CombatPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<DamageDealtEvent>()
             .add_event::<HealthRegainResetEvent>()
-            .add_systems(Update, (damage_system, regenerate_health_system));
+            .add_systems(Update, (damage_system, regenerate_health_system, reset_regenerate_health_system));
     }
 }
 
-/// System that handles health regeneration for entities over time.
+/// System that handles health regeneration over time for player entities only.
 ///
-/// This system ticks two internal timers per entity:
+/// This system simulates a delayed regeneration mechanism, where a player begins
+/// to regain health gradually if they haven't taken damage for a specified period.
 ///
-/// - `delay_timer`: Defines how long the entity must go without taking damage before regeneration starts.
-/// - `interval_timer`: Once the delay is passed, defines how frequently the entity regains health.
+/// Internally, it uses two timers per player:
 ///
-/// When the delay timer finishes, the interval timer begins ticking. Every time the interval timer finishes,
-/// the entity regains a fixed amount of health, defined by its `HealthRegainComponent`.
+/// - `delay_timer`: Starts ticking after the player takes damage. Health regeneration
+///   will not begin until this timer finishes.
+/// - `interval_timer`: Once the delay is over, this timer controls how often health is restored.
 ///
-/// This system assumes that the entity's `HealthRegainComponent` is reset (via `.reset()`) whenever it takes damage,
-/// effectively restarting the delay period.
+/// When the delay timer completes, the interval timer starts ticking. Every time it finishes,
+/// a fixed amount of health is restored, as specified in the `HealthRegainComponent`.
+///
+/// This system assumes that the `HealthRegainComponent::reset()` method is called elsewhere (e.g., in the
+/// `damage_system`) to restart the delay timer whenever the player takes damage.
 ///
 /// ### Components required per entity:
-/// - [`HealthComponent`] — stores the current and maximum health values.
-/// - [`HealthRegainComponent`] — manages the regeneration logic (timers and regeneration amount).
+/// - [`HealthComponent`] — Tracks the entity's current and maximum health.
+/// - [`HealthRegainComponent`] — Manages regeneration timers and heal amount.
+/// - [`PlayerComponent`] — Marker component to filter only player entities.
 ///
 /// ### Parameters:
-/// - `time`: Global [`Time`] resource used to tick timers.
-/// - `query`: Iterates over all entities with both `HealthComponent` and `HealthRegainComponent`.
+/// - `time`: Global [`Time`] resource used to advance timers.
+/// - `query`: Only player entities (`With<PlayerComponent>`) that have both `HealthComponent`
+///   and `HealthRegainComponent`.
 ///
-/// ### Example:
+/// ### Example Flow:
 /// ```text
-/// Entity takes damage → delay timer starts.
-/// After `x` seconds without damage → interval timer begins ticking every 1 second.
-/// Every time interval timer finishes → +1 health is restored.
+/// Player takes damage → delay timer is reset.
+/// After delay duration passes without further damage → interval timer starts ticking.
+/// Each time interval finishes → player heals by a fixed amount (e.g., +1 HP).
 /// ```
 fn regenerate_health_system(
     time: Res<Time>,
@@ -49,6 +55,44 @@ fn regenerate_health_system(
     }
 }
 
+
+/// System that resets the health regeneration state for player entities upon receiving a reset event.
+///
+/// This system listens for [`HealthRegainResetEvent`] events, which are typically emitted
+/// when an entity takes damage. Upon receiving such an event, it checks whether the targeted
+/// entity is a player (via [`PlayerComponent`]) and, if so, resets its [`HealthRegainComponent`].
+///
+/// Resetting the component restarts the internal delay and interval timers, ensuring that
+/// health regeneration is paused and will only begin again after a new delay period.
+///
+/// ### Components required per entity:
+/// - [`HealthRegainComponent`] — Manages regeneration logic and timers.
+/// - [`PlayerComponent`] — Used to filter the affected entities to only players.
+///
+/// ### Parameters:
+/// - `time`: Global [`Time`] resource (unused here but kept for consistency or future use).
+/// - `health_regain_reset_events`: Reads the queue of incoming `HealthRegainResetEvent`s.
+/// - `query`: Targets player entities that have `HealthRegainComponent`.
+///
+/// ### Example Flow:
+/// ```text
+/// Player takes damage → `HealthRegainResetEvent` is emitted → this system resets regeneration.
+/// ```
+///
+/// This system ensures that only player entities respond to the regeneration reset logic.
+fn reset_regenerate_health_system(
+    time: Res<Time>,
+    mut health_regain_reset_events: EventReader<HealthRegainResetEvent>,
+    mut query: Query<&mut HealthRegainComponent, With<PlayerComponent>>,
+) {
+    for event in health_regain_reset_events.read() {
+        if let Ok(mut regain) = query.get_mut(event.entity) {
+            regain.reset();
+        }
+    }
+}
+
+
 /// System that processes damage events and applies damage to target entities' health.
 ///
 /// This system listens to [`DamageDealtEvent`] events and, for each event:
@@ -58,7 +102,6 @@ fn regenerate_health_system(
 ///
 /// ### Components required per target entity:
 /// - [`HealthComponent`] — stores the entity's health and applies the damage logic.
-/// - [`Transform`] — can be used later to spawn visual effects at the entity's position.
 ///
 /// ### Parameters:
 /// - `time`: The global [`Time`] resource (not currently used but available for effect timing if needed).
@@ -76,15 +119,21 @@ fn regenerate_health_system(
 /// -
 fn damage_system(
     time: Res<Time>,
-    mut damage_dealt_event: EventReader<DamageDealtEvent>,
-    mut query: Query<(&Entity, &mut HealthComponent, &mut HealthRegainComponent, &Transform)>,
+    mut damage_dealt_events: EventReader<DamageDealtEvent>,
+    mut health_regain_reset_events: EventWriter<HealthRegainResetEvent>,
+    mut query: Query<(Entity, &mut HealthComponent)>,
 ) {
-    for event in damage_dealt_event.read() {
-        if let Ok((_entity, mut health_component, mut health_regain_component, transform))
+    for event in damage_dealt_events.read() {
+        if let Ok((_entity, mut health_component))
             = query.get_mut(event.target) {
             health_component.take_damage(event.damage);
 
-            health_regain_component.reset();
+            health_regain_reset_events.send(
+                HealthRegainResetEvent{
+                    entity: event.target,
+                }
+            );
+
 
             // TODO: Add visual/audio feedback effect at the entity's position
         }

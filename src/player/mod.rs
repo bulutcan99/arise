@@ -6,12 +6,13 @@ use leafwing_input_manager::plugin::InputManagerPlugin;
 use engine::abilities::{AbilitiesResource, AbilityDescriptionsResource, ActivateAbilityEvent};
 use engine::input::PlayerAction;
 use engine::player::PlayersResource;
-use engine::states::{AppStates, GameEnterSet};
+use engine::states::{AppStates};
 use crate::player::character::CharactersResource;
 use crate::player::spawn::spawn_player_system;
 
 pub mod spawn;
 pub mod character;
+pub mod systems;
 
 pub struct PlayerPlugin;
 
@@ -41,13 +42,12 @@ impl Plugin for PlayerPlugin {
 
         app.add_systems(
             OnEnter(AppStates::Game),
-            spawn_player_system.in_set(GameEnterSet::SpawnPlayer),
+            spawn_player_system
         );
 
-        app.add_systems(
-            Update,
-            todo!("Player system will add here!")
-        );
+        /*
+            TODO: player sistemleri eklenecek
+        */
 
     }
 }

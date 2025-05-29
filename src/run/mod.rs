@@ -1,0 +1,1 @@
+// TODO: her run yapilacak ayarlamalar

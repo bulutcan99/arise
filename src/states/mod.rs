@@ -5,7 +5,7 @@ use bevy::prelude::{
 	Plugin,
 };
 use bevy_asset_loader::prelude::*;
-use engine::states::{AppStates, GameEnterSet};
+use engine::states::{AppStates};
 
 /// Includes systems that handle state transitions for `AppStates` and `GameStates`. Also includes
 /// an asset loading state.
@@ -15,12 +15,16 @@ impl Plugin for StatesPlugin {
 	fn build(&self, app: &mut App) {
 		app.add_loading_state(
 			LoadingState::new(AppStates::LoadingAssets)
-				.continue_to_state(AppStates::MainMenu)
+				.continue_to_state(AppStates::Game)
 				.with_dynamic_assets_file::<StandardDynamicAssetCollection>(
 					"shadow_assets.assets.ron",
 				)
 				.load_collection::<PlayerShadowAssets>(),
 		);
+
+		log::info!("Assets loaded");
+
+		/*
 
 		/// Configure the system sets that must run in order when entering the Game state.
 		///
@@ -42,5 +46,7 @@ impl Plugin for StatesPlugin {
 					.chain(),
 			);
 		});
+
+		 */
 	}
 }

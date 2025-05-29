@@ -14,10 +14,13 @@ mod plugins;
 mod states;
 mod ui;
 mod combat;
+mod run;
+mod scanner;
+mod spawnable;
 
 fn main() {}
 
-// TODO: After some time player will set display!
+// TODO: Player will set display!
 fn set_display_config() -> DisplayConfig {
     DisplayConfig::new()
 }
@@ -30,11 +33,3 @@ fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
         })
         .set(ImagePlugin::default_nearest())
 }
-// ()
-// fn custom_plugins() -> PluginGroupBuilder {}
-//
-// fn build_app<P1: PluginGroup, P2: PluginGroup>(
-// default_plugins: P1,
-// custom_plugins: P2,
-// ) -> App {
-// }

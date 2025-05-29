@@ -8,21 +8,29 @@ pub enum AppStates {
     #[default]
     LoadingAssets,
 
-    /// The main menu screen of the game.
-    MainMenu,
-
-    /// One-time state to set up the game world before transitioning to gameplay.
-    InitializeRun,
-
     /// Active gameplay state (the main game loop).
     Game,
 
     /// Game Over screen shown when the player is defeated.
     GameOver,
 
+
+    /*
+
+    /// The main menu screen of the game.
+    MainMenu,
+
+    /// One-time state to set up the game world before transitioning to gameplay.
+    InitializeRun,
+
+
     /// Victory screen shown when the player completes the game successfully.
     Victory,
+
+     */
 }
+
+/*
 
 #[derive(Debug, Hash, PartialEq, Eq, Clone, SystemSet)]
 pub enum GameEnterSet {
@@ -31,6 +39,8 @@ pub enum GameEnterSet {
     SpawnPlayer,
     BuildUi,
 }
+
+*/
 
 /// In-game substates used during active gameplay.
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Default, States)]

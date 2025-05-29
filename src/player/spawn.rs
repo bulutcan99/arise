@@ -16,7 +16,7 @@ use engine::input::{InputsResource, PlayerAction, PlayerInput};
 use engine::player::{PlayerBundle, PlayerIDComponent, PlayersResource};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::states::GameCleanup;
-use crate::r#mod::{AnimationComponent, AnimationDirection};
+use crate::animation::{AnimationComponent, AnimationDirection};
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
 

@@ -1,0 +1,25 @@
+(
+	characters: {
+		ShadowMonarch: (
+			name: "ShadowMonarch",
+			acceleration: (25.0, 25.0),
+			deceleration: (10.0, 10.0),
+			speed: (300.0, 300.0),
+			collider_dimensions: (2.0 , 4.0),
+			collider_density: 1.0,
+			character_type: ShadowMonarch,
+			health: 100,
+			life_steal_percent: 5.0,
+			collision_damage: 10,
+			weapon_damage: 10,
+			projectile_speed: 800.0,
+            projectile_spawn_position: Local((0.0, 40.0)),
+            projectile_despawn_time: 1.0,
+            projectile_size: 1.0,
+            projectile_count: 1,
+			slot_1_ability: Some(ShadowSummon),
+			slot_2_ability: Some(ShadowDash),
+			slot_3_ability: Some(MonarchForm),
+		),
+	}
+)
