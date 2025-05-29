@@ -22,7 +22,7 @@ mod run;
 mod scanner;
 mod spawnable;
 
-// TODO: **** Player'i ortala spawn olurken su an gorunmuyor
+// TODO: **** Player'i ortala spawn olurken su an gorunmuyor ****
 fn main() {
     let display_config = set_display_config();
     let mut app = build_app(
