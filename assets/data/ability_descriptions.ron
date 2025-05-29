@@ -1,11 +1,11 @@
 (
     slot_one: {
-        ShadowSummonData: "Summon shadow.",
+        ShadowSummon: "Summon shadow.",
     },
     slot_two: {
-        ShadowDashData: "Dash shadow.",
+        ShadowDash: "Dash shadow.",
     },
     slot_three: {
-         MonarchFormData: "Evolve to Monarch.",
+         MonarchForm: "Evolve to Monarch.",
     }
 )

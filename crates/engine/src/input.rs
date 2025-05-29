@@ -60,9 +60,6 @@ pub enum MenuAction {
     /// Join the game using a keyboard
     JoinKeyboard,
 
-    /// Join the game using a gamepad
-    JoinGamepad,
-
     /// Go back or cancel an action
     Back,
 
@@ -88,24 +85,8 @@ pub enum MenuAction {
     /// Navigate right in the menu using keyboard input
     NavigateRightKeyboard,
 
-    // Navigation - Gamepad
-    /// Navigate up in the menu using gamepad input
-    NavigateUpGamepad,
-
-    /// Navigate down in the menu using gamepad input
-    NavigateDownGamepad,
-
-    /// Navigate left in the menu using gamepad input
-    NavigateLeftGamepad,
-
-    /// Navigate right in the menu using gamepad input
-    NavigateRightGamepad,
-
     /// Ready up using keyboard input
     PlayerReadyKeyboard,
-
-    /// Ready up using gamepad input
-    PlayerReadyGamepad,
 }
 
 /// Defines input actions available during gameplay (e.g., when fighting enemies).
@@ -156,17 +137,12 @@ pub struct InputsResource {
 
     /// Input map for player actions when using a keyboard
     pub player_keyboard: InputMap<PlayerAction>,
-
-    /// Input map for player actions when using a gamepad
-    pub player_gamepad: InputMap<PlayerAction>,
 }
 
 #[derive(Deserialize)]
 pub struct InputData {
     pub menu_keyboard: Vec<(MenuAction, KeyCode)>,
-    pub menu_gamepad: Vec<(MenuAction, GamepadButton)>,
     pub player_keyboard: Vec<(PlayerAction, KeyCode)>,
-    pub player_gamepad: Vec<(PlayerAction, GamepadButton)>,
     pub player_mouse: Vec<(PlayerAction, MouseButton)>,
 }
 
@@ -174,12 +150,10 @@ impl From<InputData> for InputsResource {
     fn from(bindings: InputData) -> Self {
         InputsResource {
             menu: InputMap::new(bindings.menu_keyboard)
-                .insert_multiple(bindings.menu_gamepad)
                 .to_owned(),
             player_keyboard: InputMap::new(bindings.player_keyboard)
                 .insert_multiple(bindings.player_mouse)
                 .to_owned(),
-            player_gamepad: InputMap::new(bindings.player_gamepad),
         }
     }
 }

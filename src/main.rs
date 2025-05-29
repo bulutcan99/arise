@@ -22,6 +22,7 @@ mod run;
 mod scanner;
 mod spawnable;
 
+// TODO: **** Player'i ortala spawn olurken su an gorunmuyor
 fn main() {
     let display_config = set_display_config();
     let mut app = build_app(
@@ -69,7 +70,6 @@ impl PluginGroup for ArisePlugins {
             .add(states::StatesPlugin)
             .add(animation::SpriteAnimationPlugin)
             .add(game::GameResourcePlugin)
-            .add(counters::CounterPlugin)
             .add(camera::CameraPlugin)
             .add(combat::CombatPlugin)
             .add(player::PlayerPlugin);

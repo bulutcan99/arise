@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+/*
+
 pub struct CounterPlugin;
 
 impl Plugin for CounterPlugin {
@@ -7,3 +9,6 @@ impl Plugin for CounterPlugin {
         todo!("Will counting game metrics.")
     }
 }
+
+
+ */

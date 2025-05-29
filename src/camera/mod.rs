@@ -18,13 +18,12 @@ fn setup_camera(mut commands: Commands) {
 }
 
 fn camera_follow_player(
-    mut camera_query: Query<&mut Transform, With<GameCamera>>,
-    player_query: Query<&Transform, With<PlayerComponent>>,
+    mut camera_query: Query<&mut Transform, (With<GameCamera>, Without<PlayerComponent>)>,
+    player_query: Query<&Transform, (With<PlayerComponent>, Without<GameCamera>)>,
 ) {
     let Ok(player_transform) = player_query.get_single() else {
         return;
     };
-
     let Ok(mut camera_transform) = camera_query.get_single_mut() else {
         return;
     };

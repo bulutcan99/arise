@@ -98,7 +98,6 @@ pub fn spawn_player_system(
     // hepsini bir struct altinda ayri bir resource altinda toplayabiliriz
     player_assets: Res<PlayerShadowAssets>,
     players_resource: Res<PlayersResource>,
-    inputs_res: Res<InputsResource>,
     abilities_res: Res<AbilitiesResource>,
     // TODO*: menu olacak ancak char selection simdilik olmayacak
 ) {
@@ -140,16 +139,7 @@ pub fn spawn_player_system(
                 1.0,
             ),
             rotation: Default::default(),
-        }).insert(InputManagerBundle::<PlayerAction> {
-        action_state: ActionState::default(),
-        input_map: match player_one.input {
-            PlayerInput::Keyboard => inputs_res.player_keyboard.clone(),
-            _ => {
-                log::error!("Wrong input!");
-                inputs_res.player_keyboard.clone()
-            }
-        },
-    }).insert(Collider::cuboid(collider_size_hx, collider_size_hy))
+        }).insert(Collider::cuboid(collider_size_hx, collider_size_hy))
         .insert(Velocity::default())
         .insert(Restitution::new(1.0))
         .insert(ColliderMassProperties::Density(char.collider_density))
