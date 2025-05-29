@@ -1,6 +1,7 @@
 use bevy::hierarchy::{ChildBuild, ChildBuilder};
 use bevy::log;
 use bevy::prelude::*;
+use bevy::utils::info;
 use bevy_asset_loader::prelude::*;
 use bevy_rapier2d::prelude::*;
 use leafwing_input_manager::prelude::*;
@@ -105,11 +106,12 @@ pub fn spawn_player_system(
     // TODO: let mut is_multiplayer = players_resource.player_data.get(1).is_some();
 
     // TODO: sonrasinda asagidaki kisim iter olacak sekilde duzenlenecek
+    info!("Player asset waiting"); // <-- Bu logdan önceki return'e dikkat alttaki kodda patliyor!
+
     let maybe_player_one = players_resource.player_data.get(0).unwrap();
     let Some(player_one) = maybe_player_one else {
         return;
     };
-
     let char = characters.characters.get(&player_one.character).unwrap();
     let collider_size_hx = char.collider_dimensions.x * game_parameters.sprite_scale / 2.0;
     let collider_size_hy = char.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
@@ -154,4 +156,6 @@ pub fn spawn_player_system(
             parent.spawn_slot_2_ability(&abilities_res, char.slot_2_ability.as_ref());
             parent.spawn_slot_3_ability(&abilities_res, char.slot_3_ability.as_ref());
         });
+
+    info!("Player spawned");
 }

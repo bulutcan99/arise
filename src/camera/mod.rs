@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use engine::player::PlayerComponent;
+use crate::consts::{CAMERA_HEIGHT, SMOOTHING};
 
 pub struct CameraPlugin;
 
@@ -28,9 +29,6 @@ fn camera_follow_player(
         return;
     };
 
-    const CAMERA_HEIGHT: f32 = 999.0;
-
-    const SMOOTHING: f32 = 0.1;
 
     let player_position = player_transform.translation.truncate();
     let camera_position = camera_transform.translation.truncate();

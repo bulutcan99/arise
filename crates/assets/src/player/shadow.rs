@@ -6,7 +6,7 @@ use bevy_asset_loader::prelude::*;
 // -----------------------------------------------------------------------------
 
 /// Asset collection for all shadow player animations (run and walk).
-#[derive(AssetCollection, Resource)]
+#[derive(AssetCollection, Resource, Debug)]
 pub struct PlayerShadowAssets {
     // --- Run Animation ---
     /// The texture atlas layout used for the run animation (8 frames, 128x128 each).

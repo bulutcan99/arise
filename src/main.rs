@@ -38,6 +38,29 @@ fn set_display_config() -> DisplayConfig {
     DisplayConfig::new()
 }
 
+/// Make the runnable platform-specific app. `base_plugins` describes "external dependencies"
+/// outside the scope of the game itself. These typically come from `bevy::MinimalPlugins` or
+/// `bevy::DefaultPlugins`. `game_plugins` comes from from `ThetawaveGamePlugins`.
+fn build_app<P1: PluginGroup, P2: PluginGroup>(base_plugins: P1, game_plugins: P2) -> App {
+    // Should everything beside
+    let mut app = App::new();
+    app.add_plugins(base_plugins);
+    app.init_state::<AppStates>(); // start game in the main menu state
+    app.add_plugins(game_plugins);
+    app.insert_resource(ClearColor(Color::srgb_u8(1, 50, 45)))
+        .insert_resource(AmbientLight::default());
+
+    app.add_systems(
+        OnEnter(AppStates::Game),
+        setup_physics,
+    );
+    if cfg!(debug_assertions) && !cfg!(test) {
+        app.add_plugins(RapierDebugRenderPlugin::default());
+    }
+    app
+}
+
+
 fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
     DefaultPlugins
         .set(WindowPlugin {
@@ -78,27 +101,6 @@ impl PluginGroup for ArisePlugins {
     }
 }
 
-/// Make the runnable platform-specific app. `base_plugins` describes "external dependencies"
-/// outside the scope of the game itself. These typically come from `bevy::MinimalPlugins` or
-/// `bevy::DefaultPlugins`. `game_plugins` comes from from `ThetawaveGamePlugins`.
-fn build_app<P1: PluginGroup, P2: PluginGroup>(base_plugins: P1, game_plugins: P2) -> App {
-    // Should everything beside
-    let mut app = App::new();
-    app.add_plugins(base_plugins);
-    app.init_state::<AppStates>(); // start game in the main menu state
-    app.add_plugins(game_plugins);
-    app.insert_resource(ClearColor(Color::BLACK))
-        .insert_resource(AmbientLight::default());
-
-    app.add_systems(
-        OnEnter(AppStates::Game),
-        setup_physics,
-    );
-    if cfg!(debug_assertions) && !cfg!(test) {
-        app.add_plugins(RapierDebugRenderPlugin::default());
-    }
-    app
-}
 
 fn setup_physics(mut commands: Commands, mut rapier_timestamp: ResMut<TimestepMode>) {
     let rapier_config = RapierConfiguration::new(SIMULATION_SCALE_FACTOR);

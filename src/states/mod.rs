@@ -1,9 +1,5 @@
 use assets::player::shadow::PlayerShadowAssets;
-use bevy::prelude::{
-	App
-	, IntoSystemSetConfigs, OnEnter,
-	Plugin,
-};
+use bevy::prelude::{App, IntoSystemSetConfigs, OnEnter, Plugin, Res, State};
 use bevy_asset_loader::prelude::*;
 use engine::states::{AppStates};
 
@@ -21,7 +17,6 @@ impl Plugin for StatesPlugin {
 				)
 				.load_collection::<PlayerShadowAssets>(),
 		);
-
 		log::info!("Assets loaded");
 
 		/*
@@ -50,3 +45,4 @@ impl Plugin for StatesPlugin {
 		 */
 	}
 }
+
