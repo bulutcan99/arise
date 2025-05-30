@@ -17,6 +17,7 @@ use engine::player::{
 use engine::states::GameCleanup;
 
 use crate::animation::{AnimationComponent, AnimationDirection};
+use crate::animation::player::PlayerAnimationState;
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
 
@@ -52,7 +53,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(ShadowSummonBundle::from(
                         &abilities_res.shadow_summon,
                     ))
-                },
+                }
             };
         }
     }
@@ -68,7 +69,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(ShadowDashBundle::from(
                         &abilities_res.shadow_dash,
                     ))
-                },
+                }
             };
         }
     }
@@ -84,7 +85,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(MonarchFormBundle::from(
                         &abilities_res.monarch_form,
                     ))
-                },
+                }
             };
         }
     }
@@ -102,34 +103,34 @@ pub fn spawn_player_system(
     // TODO*: menu ve char selection simdilik olmayacak calisir hale getirince eklenecek
 ) {
     // TODO*: sonrasinda bu kisim char selectiona tasinacak
-    players_resource.player_data.push(Some(PlayerData {
+    players_resource.player_data = Some(PlayerData {
         input: PlayerInput::Keyboard,
         character: CharacterType::ShadowMonarch,
-    }));
-    // TODO: sonrasinda asagidaki kisim iter olacak sekilde duzenlenecek
-    info!("Player asset waiting"); // <-- Bu logdan önceki return'e dikkat alttaki kodda patliyor!
+    });
 
-    let maybe_player_one = players_resource.player_data.get(0).unwrap();
-    let Some(player_one) = maybe_player_one else {
+    let Some(player_one) = players_resource.player_data.as_ref() else {
+        error!("Player data missing");
         return;
     };
+
     let char = characters.characters.get(&player_one.character).unwrap();
     let player_bundle =
         PlayerBundle::from(char).with_id(PlayerIDComponent::One);
     let mut player_entity = commands.spawn_empty();
     player_entity
         .insert(player_bundle)
-        .insert((
+        .insert(
             Sprite::from_atlas_image(
                 player_assets.run_image.clone(),
                 TextureAtlas::from(player_assets.run_layout.clone()),
-            ),
-            Transform::from_xyz(0., 300., 0.),
+            ))
+        .insert(
             AnimationComponent {
                 timer: Timer::from_seconds(0.1, TimerMode::Repeating),
                 direction: AnimationDirection::Forward,
-            },
-        ))
+            })
+        .insert(PlayerAnimationState::Running)
+        .insert(Transform::from_xyz(0., 0., 0.))
         .insert(HealthComponent::from(char))
         .insert(HealthRegainComponent::default())
         .insert(GameCleanup)

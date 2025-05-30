@@ -8,17 +8,7 @@ use crate::spwanable::SpawnPosition;
 #[derive(Resource, Debug, Default)]
 pub struct PlayersResource {
     /// List of player slots. A slot is `Some(PlayerData)` if a player has joined, `None` otherwise.
-    pub player_data: Vec<Option<PlayerData>>,
-}
-
-impl PlayersResource {
-    /// Returns the input methods used by all active players.
-    pub fn get_all_used_inputs(&self) -> Vec<PlayerInput> {
-        self.player_data
-            .iter()
-            .filter_map(|valid_data| valid_data.clone().map(|data| data.input))
-            .collect()
-    }
+    pub player_data: Option<PlayerData>,
 }
 
 /// Represents a player’s configuration for a slot, including chosen character and input method.

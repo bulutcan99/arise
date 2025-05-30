@@ -1,3 +1,5 @@
+pub mod player;
+
 use bevy::app::{App, Plugin, Update};
 use bevy::asset::Assets;
 use bevy::ecs::component::Component;
@@ -8,21 +10,23 @@ use bevy::ecs::system::{Query, Res};
 use bevy::prelude::{error, Resource};
 use bevy::sprite::{Sprite, TextureAtlas, TextureAtlasLayout};
 use bevy::state::condition::in_state;
-use bevy::time::{Time, Timer};
+use bevy::time::{Time, Timer, TimerMode};
 use engine::animation::AnimationCompletedEvent;
 use engine::states;
 use serde::Deserialize;
+use crate::animation::player::{player_handle_animation_change, PlayerAnimationChangeEvent};
 
 pub struct SpriteAnimationPlugin;
 
 impl Plugin for SpriteAnimationPlugin {
     fn build(&self, app: &mut App) {
+        app.add_event::<PlayerAnimationChangeEvent>();
+        app.add_event::<AnimationCompletedEvent>();
         app.add_systems(
             Update,
             animate_sprite_system.run_if(in_state(states::AppStates::Game)),
-        );
-
-        app.add_event::<AnimationCompletedEvent>();
+        )
+            .add_systems(Update, player_handle_animation_change.run_if(in_state(states::AppStates::Game)));
     }
 }
 
@@ -33,6 +37,15 @@ pub struct AnimationComponent {
     pub timer: Timer,
     /// Direction of the animation
     pub direction: AnimationDirection,
+}
+
+impl From<AnimationData> for AnimationComponent {
+    fn from(data: AnimationData) -> Self {
+        Self {
+            timer: Timer::from_seconds(data.frame_duration, data.mode),
+            direction: data.direction,
+        }
+    }
 }
 
 #[derive(Deserialize, Clone)]
@@ -52,6 +65,7 @@ pub enum PingPongDirection {
 // TODO*: animation frame'i butun animationlar icin dynamic collection yapip animation'da calistirip burda res olarak cagir
 #[derive(Resource, Deserialize)]
 pub struct AnimationData {
+    pub mode: TimerMode,
     pub direction: AnimationDirection,
     pub frame_duration: f32,
 }
@@ -77,7 +91,7 @@ pub fn animate_sprite_system(
                 let num_frames = layout.len();
 
                 match &mut anim.direction {
-                    AnimationDirection::None => {},
+                    AnimationDirection::None => {}
                     AnimationDirection::Forward => {
                         let new_idx = (atlas.index + 1) % num_frames;
                         if new_idx == 0 {
@@ -85,7 +99,7 @@ pub fn animate_sprite_system(
                                 .send(AnimationCompletedEvent(entity));
                         }
                         atlas.index = new_idx;
-                    },
+                    }
                     AnimationDirection::PingPong(direction) => {
                         match direction {
                             PingPongDirection::Forward => {
@@ -95,7 +109,7 @@ pub fn animate_sprite_system(
                                 } else {
                                     atlas.index += 1;
                                 }
-                            },
+                            }
                             PingPongDirection::Backward => {
                                 if atlas.index == 0 {
                                     *direction = PingPongDirection::Forward;
@@ -103,9 +117,9 @@ pub fn animate_sprite_system(
                                 } else {
                                     atlas.index -= 1;
                                 }
-                            },
+                            }
                         }
-                    },
+                    }
                 }
             } else {
                 error!(

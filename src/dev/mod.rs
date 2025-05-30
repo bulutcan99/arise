@@ -4,6 +4,7 @@ use bevy::prelude::*;
 use bevy::text::FontSmoothing;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use engine::states::AppStates;
+use crate::animation::player::PlayerAnimationChangeEvent;
 
 /// `DevelopmentPlugin` is a Bevy plugin that provides runtime diagnostics
 /// and developer tools such as FPS overlay, world inspector, and frame time logging.

@@ -10,6 +10,15 @@ use bevy_asset_loader::prelude::*;
 pub struct PlayerShadowAssets {
     // --- Run Animation ---
     /// The texture atlas layout used for the run animation (8 frames, 128x128 each).
+    #[asset(key = "shadow.idle.layout")]
+    pub idle_layout: Handle<TextureAtlasLayout>,
+
+    /// The image for the shadow player's run animation.
+    #[asset(key = "shadow.idle.image")]
+    pub idle_image: Handle<Image>,
+
+    // --- Run Animation ---
+    /// The texture atlas layout used for the run animation (8 frames, 128x128 each).
     #[asset(key = "shadow.run.layout")]
     pub run_layout: Handle<TextureAtlasLayout>,
 
