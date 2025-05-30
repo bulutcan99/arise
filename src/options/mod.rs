@@ -1,7 +1,16 @@
+use bevy::prelude::*;
+use engine::input::InputsResource;
+use input::get_input_bindings;
+
 pub mod display;
 pub mod input;
 
-pub const PHYSICS_PIXELS_PER_METER: f32 = 10.0;
+pub struct OptionsPlugin;
 
-
-// TODO: Options Plugin
+impl Plugin for OptionsPlugin {
+    fn build(&self, app: &mut App) {
+        app.insert_resource(InputsResource::from(
+            get_input_bindings(),
+        ));
+    }
+}

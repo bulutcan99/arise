@@ -7,7 +7,6 @@ use options::display::DisplayConfig;
 
 use crate::consts::SIMULATION_SCALE_FACTOR;
 use crate::game::counters;
-use crate::options::PHYSICS_PIXELS_PER_METER;
 
 mod animation;
 mod camera;
@@ -85,6 +84,7 @@ impl PluginGroup for ArisePlugins {
             .add(states::StatesPlugin)
             .add(animation::SpriteAnimationPlugin)
             .add(game::GameResourcePlugin)
+            .add(options::OptionsPlugin)
             .add(camera::CameraPlugin)
             .add(combat::CombatPlugin)
             .add(player::PlayerPlugin);

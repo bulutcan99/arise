@@ -8,11 +8,10 @@ use engine::abilities::{
     AbilitiesResource, SlotOneAbilityType, SlotThreeAbilityType,
     SlotTwoAbilityType,
 };
-use engine::animation::AnimationComponent;
 use engine::animation::states::AnimationState;
+use engine::animation::AnimationComponent;
 use engine::character::CharacterType;
 use engine::health::{HealthComponent, HealthRegainComponent};
-use engine::input::PlayerInput;
 use engine::player::{
     PlayerBundle, PlayerData, PlayerIDComponent, PlayersResource,
 };
@@ -54,7 +53,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(ShadowSummonBundle::from(
                         &abilities_res.shadow_summon,
                     ))
-                }
+                },
             };
         }
     }
@@ -70,7 +69,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(ShadowDashBundle::from(
                         &abilities_res.shadow_dash,
                     ))
-                }
+                },
             };
         }
     }
@@ -86,7 +85,7 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
                     self.spawn(MonarchFormBundle::from(
                         &abilities_res.monarch_form,
                     ))
-                }
+                },
             };
         }
     }
@@ -106,7 +105,6 @@ pub fn spawn_player_system(
 ) {
     // TODO*: sonrasinda bu kisim char selectiona tasinacak
     players_resource.player_data = Some(PlayerData {
-        input: PlayerInput::Keyboard,
         character: CharacterType::ShadowMonarch,
     });
 
@@ -126,11 +124,10 @@ pub fn spawn_player_system(
     let mut player_entity = commands.spawn_empty();
     player_entity
         .insert(player_bundle)
-        .insert(
-            Sprite::from_atlas_image(
-                player_assets.run_image.clone(),
-                TextureAtlas::from(player_assets.run_layout.clone()),
-            ))
+        .insert(Sprite::from_atlas_image(
+            player_assets.run_image.clone(),
+            TextureAtlas::from(player_assets.run_layout.clone()),
+        ))
         .insert(AnimationComponent::from(animation_data))
         .insert(animation_state)
         .insert(Transform::from_xyz(0., 0., 0.))

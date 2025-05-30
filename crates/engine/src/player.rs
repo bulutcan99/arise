@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::character::{Character, CharacterType};
-use crate::input::PlayerInput;
 use crate::spwanable::SpawnPosition;
 
 /// Stores all active and potential player slots.
@@ -16,8 +15,6 @@ pub struct PlayersResource {
 pub struct PlayerData {
     /// The character selected by the player.
     pub character: CharacterType,
-    /// The input method used by the player (keyboard, gamepad, etc.).
-    pub input: PlayerInput,
 }
 
 /// Bundle containing all necessary components to represent a player entity.
