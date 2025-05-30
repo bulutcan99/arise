@@ -1,31 +1,17 @@
 use bevy::prelude::*;
 use assets::player::shadow::PlayerShadowAssets;
+use engine::animation::AnimationComponent;
+use engine::animation::states::{AnimationChangeEvent, AnimationState};
 use engine::player::PlayerComponent;
-use crate::animation::AnimationComponent;
-
-#[derive(Component, PartialEq, Clone, Copy, Debug, Default)]
-pub enum PlayerAnimationState {
-    #[default]
-    Nothing,
-    Idle,
-    Running,
-    Attacking,
-}
-
-#[derive(Event)]
-pub struct PlayerAnimationChangeEvent {
-    pub entity: Entity,
-    pub state: PlayerAnimationState,
-}
-
+/*
 pub fn player_handle_animation_change(
-    mut events: EventReader<PlayerAnimationChangeEvent>,
+    mut events: EventReader<AnimationChangeEvent>,
     player_assets: Res<PlayerShadowAssets>,
     mut query: Query<(
         Entity,
         &mut AnimationComponent,
         &mut Sprite,
-        &mut PlayerAnimationState,
+        &mut AnimationState,
     ), With<PlayerComponent>>,
 ) {
     for event in events.read() {
@@ -66,3 +52,5 @@ pub fn player_handle_animation_change(
         }
     }
 }
+
+ */

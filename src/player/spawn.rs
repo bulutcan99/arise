@@ -8,6 +8,8 @@ use engine::abilities::{
     AbilitiesResource, SlotOneAbilityType, SlotThreeAbilityType,
     SlotTwoAbilityType,
 };
+use engine::animation::AnimationComponent;
+use engine::animation::states::AnimationState;
 use engine::character::CharacterType;
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::input::PlayerInput;
@@ -16,8 +18,7 @@ use engine::player::{
 };
 use engine::states::GameCleanup;
 
-use crate::animation::{AnimationComponent, AnimationDirection};
-use crate::animation::player::PlayerAnimationState;
+use crate::animation::animation::AnimationsResource;
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
 
@@ -99,6 +100,7 @@ pub fn spawn_player_system(
     // hepsini bir struct altinda ayri bir resource altinda toplayabiliriz
     player_assets: Res<PlayerShadowAssets>,
     mut players_resource: ResMut<PlayersResource>,
+    animations_resource: ResMut<AnimationsResource>,
     abilities_res: Res<AbilitiesResource>,
     // TODO*: menu ve char selection simdilik olmayacak calisir hale getirince eklenecek
 ) {
@@ -116,6 +118,11 @@ pub fn spawn_player_system(
     let char = characters.characters.get(&player_one.character).unwrap();
     let player_bundle =
         PlayerBundle::from(char).with_id(PlayerIDComponent::One);
+    let animation_state = AnimationState::Idle;
+    let Some(animation_data) = animations_resource.animations.get(&animation_state) else {
+        panic!("Animation data missing")
+    };
+
     let mut player_entity = commands.spawn_empty();
     player_entity
         .insert(player_bundle)
@@ -124,17 +131,13 @@ pub fn spawn_player_system(
                 player_assets.run_image.clone(),
                 TextureAtlas::from(player_assets.run_layout.clone()),
             ))
-        .insert(
-            AnimationComponent {
-                timer: Timer::from_seconds(0.1, TimerMode::Repeating),
-                direction: AnimationDirection::Forward,
-            })
-        .insert(PlayerAnimationState::Running)
+        .insert(AnimationComponent::from(animation_data))
+        .insert(animation_state)
         .insert(Transform::from_xyz(0., 0., 0.))
         .insert(HealthComponent::from(char))
         .insert(HealthRegainComponent::default())
         .insert(GameCleanup)
-        .insert(Name::new("Player"))
+        .insert(Name::new("Shadow"))
         .with_children(|parent| {
             parent.spawn_slot_1_ability(
                 &abilities_res,

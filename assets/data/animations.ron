@@ -1,0 +1,22 @@
+(
+    animations: {
+        Nothing: (
+            frame_duration: 0.0,
+            mode: Once,
+            direction: Forward,
+            trigger: Immediate,
+        ),
+        Idle: (
+            frame_duration: 0.3,
+            mode: Repeating,
+            direction: Forward,
+            trigger: AfterDelay(3.0),
+        ),
+        Running: (
+            frame_duration: 0.1,
+            mode: Repeating,
+            direction: Forward,
+            trigger: Immediate,
+        ),
+    },
+)
