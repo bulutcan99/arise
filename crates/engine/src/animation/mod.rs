@@ -3,8 +3,11 @@ pub mod trigger;
 
 use bevy::prelude::*;
 use serde::Deserialize;
+
 use crate::animation::states::AnimationState;
-use crate::animation::trigger::{AnimationDirection, AnimationTimerMode, AnimationTrigger};
+use crate::animation::trigger::{
+    AnimationDirection, AnimationTimerMode, AnimationTrigger,
+};
 
 /// A tag on entities that need to be animated
 #[derive(Component)]
@@ -28,7 +31,7 @@ impl From<&AnimationData> for AnimationComponent {
     }
 }
 
-#[derive( Deserialize,Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct AnimationData {
     pub frame_duration: f32,
     pub mode: AnimationTimerMode,
