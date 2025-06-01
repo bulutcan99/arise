@@ -9,6 +9,7 @@ use engine::player::PlayersResource;
 use engine::states::AppStates;
 use image::codecs::png::FilterType::Up;
 use leafwing_input_manager::plugin::InputManagerPlugin;
+use systems::movement::movement_system;
 
 use crate::player::character::CharactersResource;
 use crate::player::spawn::spawn_player_system;
@@ -53,7 +54,9 @@ impl Plugin for PlayerPlugin {
             spawn_player_system,
         );
 
-        // TODO: player sistemleri eklenecek
+        app.add_systems(
+            Update,
+            (movement_system).run_if(in_state(AppStates::Game)),
+        );
     }
 }
-

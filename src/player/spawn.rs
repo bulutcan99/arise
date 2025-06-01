@@ -11,7 +11,7 @@ use engine::abilities::{
 };
 use engine::animation::states::AnimationState;
 use engine::animation::AnimationComponent;
-use engine::character::CharacterType;
+use engine::character::{Character, CharacterType};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::input::{InputsResource, PlayerAction};
 use engine::player::{
@@ -95,48 +95,47 @@ impl PlayerAbilityChildBuilderExt for ChildBuilder<'_> {
     }
 }
 
-pub fn spawn_player_system(
-    mut commands: Commands,
-    characters: Res<CharactersResource>,
-    game_parameters: Res<GameResource>,
-    // TODO: sonrasi icin spawn olcak tipe gore asset eklenecek (bunun icin tum assetler loadlandiktan sonra
-    // hepsini bir struct altinda ayri bir resource altinda toplayabiliriz
-    player_assets: Res<PlayerShadowAssets>,
-    mut players_res: ResMut<PlayersResource>,
-    animations_res: ResMut<AnimationsResource>,
-    input_res: Res<InputsResource>,
-    abilities_res: Res<AbilitiesResource>,
-    // TODO*: menu ve char selection simdilik olmayacak calisir hale getirince eklenecek
-) {
+fn prepare_player_character_data<'a>(
+    players_res: &mut ResMut<PlayersResource>, /* Geçici olarak karakter seçimi burada */
+    characters_res: &'a Res<CharactersResource>,
+) -> Result<&'a Character, String> {
     // TODO*: sonrasinda bu kisim char selectiona tasinacak
-    players_res.player_data = Some(PlayerData {
-        character: CharacterType::ShadowMonarch,
-    });
+    // Bu kısım normalde daha karmaşık bir karakter seçimi mekanizmasından gelebilir.
+    // Şimdilik orijinal mantığı koruyoruz.
+    if players_res.player_data.is_none() {
+        players_res.player_data = Some(PlayerData {
+            character: CharacterType::ShadowMonarch,
+        });
+    }
 
-    let Some(player_one) = players_res.player_data.as_ref() else {
-        error!("Player data missing");
-        return;
+    let player_data = players_res
+        .player_data
+        .as_ref()
+        .ok_or_else(|| "Player data missing after explicit set".to_string())?;
+    characters_res
+        .characters
+        .get(&player_data.character)
+        .ok_or_else(|| "Character definition not found".to_string())
+}
+
+fn add_visual_and_animation_components(
+    entity_commands: &mut EntityCommands,
+    char_data: &Character,
+    game_parameters: &Res<GameResource>,
+    player_assets: &Res<PlayerShadowAssets>,
+    animations_res: &Res<AnimationsResource>,
+    initial_animation_state: AnimationState,
+) {
+    let Some(animation_data) = animations_res.animations.get(&initial_animation_state) else {
+        panic!("Animation data for {:?} missing", initial_animation_state); 
     };
 
-    let char = characters.characters.get(&player_one.character).unwrap();
-    // scale collider to align with the sprite
-    let collider_size_hx =
-        char.collider_dimensions.x * game_parameters.sprite_scale / 2.0;
-    let collider_size_hy =
-        char.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
-
-    let player_bundle =
-        PlayerBundle::from(char).with_id(PlayerIDComponent::One);
-    let animation_state = AnimationState::Idle;
-    let Some(animation_data) = animations_res.animations.get(&animation_state) else {
-        panic!("Animation data missing")
-    };
-
-    let mut player_entity = commands.spawn_empty();
-    player_entity
-        .insert(player_bundle)
-        .insert(Name::new("Shadow"))
-        .insert(Transform {
+    entity_commands.insert((
+        Name::new(format!(
+            "Player - {:?}",
+            char_data.character_type
+        )),
+        Transform {
             translation: Vec3::ZERO,
             scale: Vec3::new(
                 game_parameters.sprite_scale,
@@ -144,47 +143,138 @@ pub fn spawn_player_system(
                 1.0,
             ),
             ..Default::default()
-        })
-        .insert(Sprite::from_atlas_image(
+        },
+        Sprite::from_atlas_image(
             player_assets.idle_image.clone(),
             TextureAtlas::from(player_assets.idle_layout.clone()),
-        ))
-        .insert(AnimationComponent::from(animation_data))
-        .insert(animation_state)
-        .insert(HealthComponent::from(char))
-        .insert(HealthRegainComponent::default())
-        .insert(RigidBody::Dynamic)
-        .insert(LockedAxes::ROTATION_LOCKED)
-        .insert(InputManagerBundle::<PlayerAction> {
-            action_state: ActionState::default(),
-            input_map: input_res.player_keyboard.clone(),
-        })
-        .insert(Collider::cuboid(
-            collider_size_hx,
-            collider_size_hy,
-        ))
-        .insert(Velocity::default())
-        .insert(Restitution::new(1.0))
-        .insert(ColliderMassProperties::Density(
-            char.collider_density,
-        ))
-        .insert(ActiveEvents::COLLISION_EVENTS)
-        .insert(ExternalImpulse::default())
-        .insert(GameCleanup)
-        .with_children(|parent| {
-            parent.spawn_slot_1_ability(
-                &abilities_res,
-                char.slot_1_ability.as_ref(),
-            );
-            parent.spawn_slot_2_ability(
-                &abilities_res,
-                char.slot_2_ability.as_ref(),
-            );
-            parent.spawn_slot_3_ability(
-                &abilities_res,
-                char.slot_3_ability.as_ref(),
-            );
-        });
+        ),
+        AnimationComponent::from(animation_data),
+        initial_animation_state,
+    ));
+}
 
-    info!("Player spawned");
+fn add_physics_components(
+    entity_commands: &mut EntityCommands,
+    char_data: &Character,
+    game_parameters: &Res<GameResource>,
+) {
+    let collider_size_hx =
+        char_data.collider_dimensions.x * game_parameters.sprite_scale / 2.0;
+    let collider_size_hy =
+        char_data.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
+
+    entity_commands.insert((
+        RigidBody::Dynamic,
+        LockedAxes::ROTATION_LOCKED,
+        Collider::cuboid(collider_size_hx, collider_size_hy),
+        Velocity::default(),
+        Restitution::new(0.5),
+        ColliderMassProperties::Density(char_data.collider_density),
+        ActiveEvents::COLLISION_EVENTS,
+        ExternalImpulse::default(),
+    ));
+}
+
+fn add_input_components(
+    entity_commands: &mut EntityCommands,
+    input_res: &Res<InputsResource>,
+) {
+    entity_commands.insert(InputManagerBundle::<PlayerAction> {
+        action_state: ActionState::default(),
+        input_map: input_res.player_keyboard.clone(),
+    });
+}
+
+fn add_gameplay_components(
+    entity_commands: &mut EntityCommands,
+    char_data: &Character,
+) {
+    entity_commands.insert((
+        HealthComponent::from(char_data),
+        HealthRegainComponent::default(),
+    ));
+}
+
+fn add_util_componenets(entity_commands: &mut EntityCommands) {
+    entity_commands.insert(GameCleanup);
+}
+
+fn spawn_player_abilities(
+    parent: &mut ChildBuilder,
+    abilities_res: &Res<AbilitiesResource>,
+    char_data: &Character,
+) {
+    parent.spawn_slot_1_ability(
+        abilities_res,
+        char_data.slot_1_ability.as_ref(),
+    );
+    parent.spawn_slot_2_ability(
+        abilities_res,
+        char_data.slot_2_ability.as_ref(),
+    );
+    parent.spawn_slot_3_ability(
+        abilities_res,
+        char_data.slot_3_ability.as_ref(),
+    );
+}
+
+pub fn spawn_player_system(
+    mut commands: Commands,
+    characters_res: Res<CharactersResource>,
+    game_parameters: Res<GameResource>,
+    player_assets: Res<PlayerShadowAssets>,
+    mut players_res: ResMut<PlayersResource>,
+    animations_res: Res<AnimationsResource>,
+    input_res: Res<InputsResource>,
+    abilities_res: Res<AbilitiesResource>,
+) {
+    let char_data = match prepare_player_character_data(
+        &mut players_res,
+        &characters_res,
+    ) {
+        Ok(data) => data,
+        Err(e) => {
+            error!(
+                "Failed to prepare player character data: {}",
+                e
+            );
+            return;
+        },
+    };
+
+    let player_bundle =
+        PlayerBundle::from(char_data).with_id(PlayerIDComponent::One);
+    let initial_animation_state = AnimationState::Idle;
+
+    let mut player_entity_commands = commands.spawn_empty();
+
+    player_entity_commands.insert(player_bundle);
+
+    add_visual_and_animation_components(
+        &mut player_entity_commands,
+        char_data,
+        &game_parameters,
+        &player_assets,
+        &animations_res,
+        initial_animation_state,
+    );
+
+    add_physics_components(
+        &mut player_entity_commands,
+        char_data,
+        &game_parameters,
+    );
+
+    add_input_components(&mut player_entity_commands, &input_res);
+    add_gameplay_components(&mut player_entity_commands, char_data);
+    add_util_componenets(&mut player_entity_commands);
+
+    player_entity_commands.with_children(|parent| {
+        spawn_player_abilities(parent, &abilities_res, char_data);
+    });
+
+    info!(
+        "Player {:?} spawned",
+        char_data.character_type
+    );
 }
