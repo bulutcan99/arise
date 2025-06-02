@@ -4,9 +4,8 @@ pub mod trigger;
 use bevy::prelude::*;
 use serde::Deserialize;
 
-use crate::animation::states::AnimationState;
 use crate::animation::trigger::{
-    AnimationDirection, AnimationTimerMode, AnimationTrigger,
+    AnimationDirection, AnimationTimerMode,
 };
 
 /// A tag on entities that need to be animated
@@ -17,7 +16,6 @@ pub struct AnimationComponent {
     /// Direction of the animation
     pub direction: AnimationDirection,
     pub mode: AnimationTimerMode,
-    pub trigger: AnimationTrigger,
 }
 
 impl From<&AnimationData> for AnimationComponent {
@@ -25,7 +23,6 @@ impl From<&AnimationData> for AnimationComponent {
         Self {
             timer: Timer::from_seconds(data.frame_duration, data.mode.into()),
             direction: data.direction,
-            trigger: data.trigger,
             mode: data.mode,
         }
     }
@@ -36,5 +33,4 @@ pub struct AnimationData {
     pub frame_duration: f32,
     pub mode: AnimationTimerMode,
     pub direction: AnimationDirection,
-    pub trigger: AnimationTrigger,
 }

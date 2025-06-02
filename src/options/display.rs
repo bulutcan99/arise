@@ -1,4 +1,5 @@
 use bevy::window::{MonitorSelection, Window, WindowMode, WindowResolution};
+use crate::consts::{WINDOW_HEIGHT, WINDOW_WIDTH};
 
 pub struct DisplayConfig {
     width: f32,
@@ -9,8 +10,8 @@ pub struct DisplayConfig {
 impl DisplayConfig {
     pub fn new() -> Self {
         Self {
-            width: 1280.0,
-            height: 1024.0,
+            width: WINDOW_WIDTH,
+            height: WINDOW_HEIGHT,
             fullscreen: false,
         }
     }

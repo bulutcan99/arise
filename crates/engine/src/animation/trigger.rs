@@ -28,23 +28,6 @@ impl From<AnimationTimerMode> for TimerMode {
     }
 }
 
-#[derive(
-    Deserialize,
-    Clone,
-    Debug,
-    EnumIter,
-    Default,
-    Copy
-)]
-pub enum AnimationTrigger {
-    #[default]
-    /// Oynatmaya hemen başla
-    Immediate,
-    /// Belirli süre sonra tetiklenir (örnek: idle animasyonu)
-    AfterDelay(f32),
-    /// Input olmadığında tetiklenir
-    OnNoInputFor(f32),
-}
 
 #[derive(
     Deserialize,

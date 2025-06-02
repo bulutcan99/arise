@@ -15,7 +15,10 @@ use engine::states;
 use serde::Deserialize;
 use engine::animation::AnimationComponent;
 use engine::animation::states::AnimationChangeEvent;
+use engine::animation::trigger::{AnimationDirection, PingPongDirection};
+use engine::states::AppStates;
 use crate::animation::animation::AnimationsResource;
+use crate::animation::player::player_handle_animation_change;
 use crate::player::character::CharactersResource;
 
 pub mod player;
@@ -33,15 +36,17 @@ impl Plugin for SpriteAnimationPlugin {
                 .unwrap(),
         );
 
+        app.add_systems(
+            Update,
+            (animate_sprite_system, player_handle_animation_change)
+                .run_if(in_state(AppStates::Game)),
+        );
     }
 }
-
-/*
 
 pub fn animate_sprite_system(
     time: Res<Time>,
     texture_atlas_layouts: Res<Assets<TextureAtlasLayout>>,
-    mut animation_complete_event_writer: EventWriter<AnimationCompletedEvent>,
     mut query: Query<(
         Entity,
         &mut AnimationComponent,
@@ -59,13 +64,8 @@ pub fn animate_sprite_system(
                 let num_frames = layout.len();
 
                 match &mut anim.direction {
-                    AnimationDirection::None => {}
                     AnimationDirection::Forward => {
                         let new_idx = (atlas.index + 1) % num_frames;
-                        if new_idx == 0 {
-                            animation_complete_event_writer
-                                .send(AnimationCompletedEvent(entity));
-                        }
                         atlas.index = new_idx;
                     }
                     AnimationDirection::PingPong(direction) => {
@@ -98,5 +98,3 @@ pub fn animate_sprite_system(
         }
     }
 }
-
- */

@@ -4,13 +4,11 @@
             frame_duration: 0.3,
             mode: Repeating,
             direction: Forward,
-            trigger: AfterDelay(5.0),
         ),
         Running: (
             frame_duration: 0.1,
             mode: Repeating,
             direction: Forward,
-            trigger: Immediate,
         ),
     },
 )
