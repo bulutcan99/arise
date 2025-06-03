@@ -21,6 +21,7 @@ mod scanner;
 mod spawnable;
 mod states;
 mod ui;
+mod weapon;
 
 fn main() {
     let display_config = set_display_config();
@@ -69,8 +70,7 @@ fn default_plugins(display: DisplayConfig) -> PluginGroupBuilder {
 
 fn custom_plugins() -> PluginGroupBuilder {
     #[allow(unused_mut)]
-    let mut res = ArisePlugins.build();
-    res
+    ArisePlugins.build()
 }
 
 pub struct ArisePlugins;
@@ -79,7 +79,7 @@ impl PluginGroup for ArisePlugins {
     fn build(self) -> PluginGroupBuilder {
         #[allow(unused_mut)]
         // Allow because we might add more platform-specific features
-        let mut res = PluginGroupBuilder::start::<Self>()
+        PluginGroupBuilder::start::<Self>()
             .add(dev::DevelopmentPlugin)
             .add(states::StatesPlugin)
             .add(animation::SpriteAnimationPlugin)
@@ -87,8 +87,7 @@ impl PluginGroup for ArisePlugins {
             .add(options::OptionsPlugin)
             .add(camera::CameraPlugin)
             .add(combat::CombatPlugin)
-            .add(player::PlayerPlugin);
-
-        res
+            .add(player::PlayerPlugin)
+            .add(weapon::WeaponPlugin)
     }
 }

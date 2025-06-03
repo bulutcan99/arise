@@ -1,0 +1,6 @@
+({
+     "weapon.staff.image": File(
+         path: "texture/weapon/staff/Ice.png",
+     ),
+ }
+)

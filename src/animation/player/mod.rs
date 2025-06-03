@@ -20,7 +20,7 @@ pub fn player_handle_animation_change(
     >,
 ) {
     for event in events.read() {
-        log::info!(
+        debug!(
             "Player animation change event for entity {:?} to state: {:?}",
             event.entity, event.state
         );
@@ -40,12 +40,12 @@ pub fn player_handle_animation_change(
         };
 
         if *current_anim_state == event.state {
-            log::info!("Animation state {:?} is already active and not delayed. Skipping.", event.state);
+            log::debug!("Animation state {:?} is already active and not delayed. Skipping.", event.state);
             continue;
         }
 
         if let Some(new_anim_data) = animations_resource.animations.get(&event.state) {
-            log::info!(
+            debug!(
                 "Changing animation for entity {:?} from {:?} to {:?}",
                 event.entity, *current_anim_state , event.state
             );
@@ -73,12 +73,12 @@ pub fn player_handle_animation_change(
                 TextureAtlas::from(layout),
             );
 
-            log::info!(
+            debug!(
                 "Successfully set entity {:?} to {:?} animation.",
                 event.entity, event.state
             );
         } else {
-            log::warn!(
+            warn!(
                 "Animation data not found in AnimationsResource for state: {:?} (entity: {:?}). Player animation unchanged.",
                 event.state, event.entity
             );
@@ -87,6 +87,6 @@ pub fn player_handle_animation_change(
 
         anim_component.timer.reset();
         anim_component.timer.unpause();
-        log::info!("Animation started.");
+        debug!("Animation started.");
     }
 }

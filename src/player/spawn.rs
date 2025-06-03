@@ -14,9 +14,7 @@ use engine::animation::AnimationComponent;
 use engine::character::{Character, CharacterType};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::input::{InputsResource, PlayerAction};
-use engine::player::{
-    PlayerBundle, PlayerData, PlayerIDComponent, PlayersResource,
-};
+use engine::player::{PlayerBundle, PlayerData, PlayerIDComponent, PlayerVelocityComponent, PlayersResource};
 use engine::states::GameCleanup;
 use leafwing_input_manager::prelude::ActionState;
 use leafwing_input_manager::InputManagerBundle;
@@ -164,14 +162,7 @@ fn add_physics_components(
         char_data.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
 
     entity_commands.insert((
-        RigidBody::Dynamic,
-        LockedAxes::ROTATION_LOCKED,
-        Collider::cuboid(collider_size_hx, collider_size_hy),
-        Velocity::default(),
-        Restitution::new(0.5),
-        ColliderMassProperties::Density(char_data.collider_density),
-        ActiveEvents::COLLISION_EVENTS,
-        ExternalImpulse::default(),
+        PlayerVelocityComponent(0.0,0.0)
     ));
 }
 

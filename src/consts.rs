@@ -1,4 +1,4 @@
-pub const WINDOW_WIDTH: f32 = 1440.;
+pub const WINDOW_WIDTH: f32 = 1920.;
 pub const WINDOW_HEIGHT: f32 = 1080.;
 
 pub const SIMULATION_SCALE_FACTOR: f32 = 1.0;

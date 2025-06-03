@@ -39,7 +39,7 @@ impl Plugin for SpriteAnimationPlugin {
         app.add_systems(
             Update,
             (animate_sprite_system, player_handle_animation_change)
-                .run_if(in_state(AppStates::Game)),
+                .run_if(in_state(AppStates::InGame)),
         );
     }
 }

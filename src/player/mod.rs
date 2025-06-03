@@ -48,15 +48,9 @@ impl Plugin for PlayerPlugin {
 
         app.insert_resource(PlayersResource::default());
 
-        info!("Player spawn started");
-        app.add_systems(
-            OnEnter(AppStates::Game),
-            spawn_player_system,
-        );
-
         app.add_systems(
             Update,
-            (movement_system).run_if(in_state(AppStates::Game)),
+            (movement_system).run_if(in_state(AppStates::InGame)),
         );
     }
 }

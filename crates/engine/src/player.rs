@@ -56,6 +56,9 @@ pub enum PlayerIDComponent {
 #[derive(Component)]
 pub struct PlayerComponent;
 
+#[derive(Component)]
+pub struct PlayerVelocityComponent(pub f32, pub f32);
+
 /// Component defining player movement attributes and capabilities.
 #[derive(Component)]
 pub struct PlayerMobilityComponent {
@@ -67,8 +70,6 @@ pub struct PlayerMobilityComponent {
     pub speed: Vec2,
     /// Size of the collider used for physics and collision detection.
     pub collider_dimensions: Vec2,
-    /// Whether movement is currently enabled for this player.
-    pub movement_enabled: bool,
 }
 
 impl From<&Character> for PlayerMobilityComponent {
@@ -78,7 +79,6 @@ impl From<&Character> for PlayerMobilityComponent {
             deceleration: character.deceleration,
             speed: character.speed,
             collider_dimensions: character.collider_dimensions,
-            movement_enabled: true,
         }
     }
 }

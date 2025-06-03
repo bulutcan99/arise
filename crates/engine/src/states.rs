@@ -8,8 +8,10 @@ pub enum AppStates {
     #[default]
     LoadingAssets,
 
+    GameInit,
+
     /// Active gameplay state (the main game loop).
-    Game,
+    InGame,
 
     /// Game Over screen shown when the player is defeated.
     GameOver,

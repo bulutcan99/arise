@@ -1,32 +1,30 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::Velocity;
-use engine::input::PlayerAction;
-use engine::player::{PlayerComponent, PlayerMobilityComponent};
-use leafwing_input_manager::prelude::ActionState;
+use leafwing_input_manager::prelude::*;
 use engine::animation::states::{AnimationChangeEvent, AnimationState};
+use engine::input::PlayerAction;
+use engine::player::{PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent};
 use crate::game::resources::GameResource;
 
-
 pub fn movement_system(
+    time: Res<Time>, // Zamanı almak için Time resource'unu ekliyoruz
     game_parameters: Res<GameResource>,
     mut animation_events: EventWriter<AnimationChangeEvent>,
-    // AnimationState component'ını sorguya ekliyoruz
     mut player_query: Query<(
-        Entity, // Event için Entity ID'sine ihtiyacımız var
+        Entity,
         &PlayerMobilityComponent,
-        &mut Velocity, // bevy_rapier2d kullanıyorsanız &mut bevy_rapier2d::prelude::Velocity
         &mut Transform,
         &ActionState<PlayerAction>,
-        &AnimationState, // Oyuncunun mevcut animasyon durumunu okumak için
-    ), With<PlayerComponent>>, // Sadece PlayerComponent'e sahip entity'ler için çalışsın
+        &AnimationState,
+        &mut PlayerVelocityComponent, // Yeni PlayerVelocity component'ını ekliyoruz
+    ), With<PlayerComponent>>,
 ) {
     for (
         entity,
         player_mobility,
-        mut vel, // Eğer bevy_rapier2d::prelude::Velocity ise vel.linvel.x/y
         mut transform,
         action_state,
-        current_animation_state, // Mevcut animasyon durumu
+        current_animation_state,
+        mut player_velocity, // PlayerVelocity'yi mutable olarak alıyoruz
     ) in player_query.iter_mut()
     {
         // Input okuma
@@ -51,7 +49,7 @@ pub fn movement_system(
         let desired_scale_x = match x_axis {
             1 => game_parameters.sprite_scale.abs(),
             -1 => -game_parameters.sprite_scale.abs(),
-            _ => transform.scale.x,
+            _ => transform.scale.x, // Mevcut ölçeği koru eğer hareket yoksa veya sadece dikey hareket varsa
         };
 
         if transform.scale.x != desired_scale_x {
@@ -66,15 +64,13 @@ pub fn movement_system(
             AnimationState::Running
         } else {
             // Eğer hareket girdisi yoksa ve oyuncu neredeyse durmuşsa Idle
-            // bevy_rapier2d::prelude::Velocity kullanıyorsanız vel.linvel.x ve vel.linvel.y olacak
-            if vel.linvel.x.abs() < game_parameters.stop_threshold &&
-                vel.linvel.y.abs() < game_parameters.stop_threshold {
+            // Artık kendi PlayerVelocity component'ımızı kullanıyoruz
+            if player_velocity.0.abs() < game_parameters.stop_threshold &&
+                player_velocity.1.abs() < game_parameters.stop_threshold {
                 AnimationState::Idle
             } else {
                 // Hareket girdisi yok ama hala kayıyor (decelerate oluyor)
-                // Bu durumda hala Running animasyonunda kalabilir veya farklı bir "kayma" animasyonu olabilir.
-                // Şimdilik Running'de kalmasını sağlayalım, böylece durana kadar koşma animasyonu devam eder.
-                AnimationState::Running
+                AnimationState::Running // Durana kadar koşma animasyonu devam eder
             }
         };
 
@@ -84,14 +80,12 @@ pub fn movement_system(
                 entity,
                 state: target_animation_state,
             });
-            // Not: Event gönderildikten sonra `current_animation_state` hemen güncellenmez.
-            // Bu güncelleme `player_handle_animation_change` sisteminde olur.
         }
 
-        // Hareketi uygula (Velocity component'ını Rapier kullanıyorsanız vel.linvel.x vb. olarak değiştirin)
+        // Hızı güncelle (PlayerVelocity component'ı üzerinde)
         apply_axis_movement(
             x_axis,
-            &mut vel.linvel.x,
+            &mut player_velocity.0, // PlayerVelocity.x'i güncelle
             player_mobility.acceleration.x,
             player_mobility.deceleration.x,
             player_mobility.speed.x,
@@ -100,19 +94,28 @@ pub fn movement_system(
 
         apply_axis_movement(
             y_axis,
-            &mut vel.linvel.y,
+            &mut player_velocity.1, // PlayerVelocity.y'yi güncelle
             player_mobility.acceleration.y,
             player_mobility.deceleration.y,
             player_mobility.speed.y,
             game_parameters.stop_threshold,
         );
+
+        // Hızı Transform'a uygula (delta time ile çarparak)
+        // Bu, hareketi kare hızından bağımsız hale getirir.
+        transform.translation.x += player_velocity.0 * time.delta_secs();
+        transform.translation.y += player_velocity.1 * time.delta_secs();
+
+        // İsteğe bağlı: Zıplama vs. için yerçekimi gibi şeyler burada eklenebilir
+        // player_velocity.y -= GRAVITY * time.delta_seconds();
+        // Sonra transform.translation.y güncellenir.
     }
 }
 
-// apply_axis_movement fonksiyonunuz aynı kalabilir
+// apply_axis_movement fonksiyonu aynı kalabilir, çünkü hala tek bir hız eksenini yönetiyor.
 fn apply_axis_movement(
     axis_input: i8,
-    velocity_axis: &mut f32, // velocity: &mut f32 idi, daha açıklayıcı olması için velocity_axis yaptım
+    velocity_axis: &mut f32,
     acceleration: f32,
     deceleration: f32,
     max_speed: f32,
@@ -120,14 +123,18 @@ fn apply_axis_movement(
 ) {
     if axis_input != 0 {
         *velocity_axis += acceleration * axis_input as f32;
-        // Hızı max_speed ile sınırla
         *velocity_axis = velocity_axis.clamp(-max_speed, max_speed);
-        // clamp kullanmak daha kısa: if velocity_axis.abs() > max_speed { *velocity_axis = velocity_axis.signum() * max_speed; }
     } else if velocity_axis.abs() > stop_threshold {
-        // Girdi yoksa yavaşla
-        *velocity_axis -= deceleration * velocity_axis.signum();
+        // Hız sıfıra doğru yavaşlıyorsa, yavaşlama miktarını mevcut hızın işaretiyle çarp
+        // Bu, hızın sıfırı geçip ters yönde ivmelenmesini önler.
+        let potential_new_velocity = *velocity_axis - deceleration * velocity_axis.signum();
+        if potential_new_velocity.signum() == velocity_axis.signum() {
+            *velocity_axis = potential_new_velocity;
+        } else {
+            // Eğer yavaşlama hızı sıfırın ötesine taşıyacaksa, hızı doğrudan sıfırla
+            *velocity_axis = 0.0;
+        }
     } else {
-        // Yeterince yavaşsa dur
         *velocity_axis = 0.0;
     }
 }
