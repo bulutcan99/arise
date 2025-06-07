@@ -1,5 +1,7 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use engine::player::PlayerComponent;
+
 use crate::consts::{CAMERA_HEIGHT, SMOOTHING};
 
 pub struct CameraPlugin;
@@ -15,12 +17,24 @@ impl Plugin for CameraPlugin {
 pub struct GameCamera;
 
 fn setup_camera(mut commands: Commands) {
-    commands.spawn((Camera2d, GameCamera));
+    commands.spawn((Camera2d, PrimaryWindow, GameCamera));
 }
 
 fn camera_follow_player(
-    mut camera_query: Query<&mut Transform, (With<GameCamera>, Without<PlayerComponent>)>,
-    player_query: Query<&Transform, (With<PlayerComponent>, Without<GameCamera>)>,
+    mut camera_query: Query<
+        &mut Transform,
+        (
+            With<GameCamera>,
+            Without<PlayerComponent>,
+        ),
+    >,
+    player_query: Query<
+        &Transform,
+        (
+            With<PlayerComponent>,
+            Without<GameCamera>,
+        ),
+    >,
 ) {
     let Ok(player_transform) = player_query.get_single() else {
         return;
@@ -28,7 +42,6 @@ fn camera_follow_player(
     let Ok(mut camera_transform) = camera_query.get_single_mut() else {
         return;
     };
-
 
     let player_position = player_transform.translation.truncate();
     let camera_position = camera_transform.translation.truncate();
