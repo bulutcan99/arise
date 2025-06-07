@@ -12,7 +12,6 @@
      "shadow.idle.image": File(
          path: "texture/player/shadow/Idle.png",
      ),
-
      "shadow.run.layout": TextureAtlasLayout(
          tile_size_x: 128,
          tile_size_y: 128,
@@ -25,6 +24,19 @@
      ),
      "shadow.run.image": File(
          path: "texture/player/shadow/Run.png",
+     ),
+     "shadow.light.attack.layout": TextureAtlasLayout(
+         tile_size_x: 128,
+         tile_size_y: 128,
+         columns: 6,
+         rows: 1,
+         padding_x: 0,
+         padding_y: 0,
+         offset_x: 0,
+         offset_y: 0,
+     ),
+     "shadow.light.attack.image": File(
+         path: "texture/player/shadow/Attack_1.png",
      ),
  }
 )

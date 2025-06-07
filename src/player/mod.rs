@@ -7,12 +7,10 @@ use engine::abilities::{
 use engine::input::PlayerAction;
 use engine::player::PlayersResource;
 use engine::states::AppStates;
-use image::codecs::png::FilterType::Up;
 use leafwing_input_manager::plugin::InputManagerPlugin;
 use systems::movement::movement_system;
 
 use crate::player::character::CharactersResource;
-use crate::player::spawn::spawn_player_system;
 
 pub mod character;
 pub mod spawn;

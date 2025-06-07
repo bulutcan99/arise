@@ -42,12 +42,10 @@ fn set_display_config() -> DisplayConfig {
 
 /// Make the runnable platform-specific app. `base_plugins` describes "external dependencies"
 /// outside the scope of the game itself. These typically come from `bevy::MinimalPlugins` or
-/// `bevy::DefaultPlugins`. `game_plugins` comes from from `ThetawaveGamePlugins`.
 fn build_app<P1: PluginGroup, P2: PluginGroup>(
     base_plugins: P1,
     game_plugins: P2,
 ) -> App {
-    // Should everything beside
     let mut app = App::new();
     app.add_plugins(base_plugins);
     app.init_state::<AppStates>(); // start game in the main menu state

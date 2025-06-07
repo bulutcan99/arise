@@ -47,7 +47,7 @@ pub fn update_weapon_transform(
 
             let player_pos = player_transform.translation;
             let direction = (cursor_pos - player_pos).normalize_or_zero();
-            let distance_from_player = 100.0;
+            let distance_from_player = 300.0;
 
             let weapon_pos = player_pos + direction * distance_from_player;
             weapon_transform.translation = Vec3::new(

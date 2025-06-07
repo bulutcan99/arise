@@ -1,9 +1,9 @@
 pub mod abilities;
 pub mod animation;
-pub mod assets;
 pub mod character;
 pub mod character_selection;
 pub mod collision;
+pub mod combat;
 pub mod health;
 pub mod input;
 pub mod objective;
@@ -12,4 +12,3 @@ pub mod run;
 pub mod spwanable;
 pub mod states;
 pub mod weapon;
-pub mod combat;

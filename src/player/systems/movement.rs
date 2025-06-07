@@ -1,22 +1,28 @@
 use bevy::prelude::*;
-use leafwing_input_manager::prelude::*;
 use engine::animation::states::{AnimationChangeEvent, AnimationState};
 use engine::input::PlayerAction;
-use engine::player::{PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent};
+use engine::player::{
+    PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent,
+};
+use leafwing_input_manager::prelude::*;
+
 use crate::game::resources::GameResource;
 
 pub fn movement_system(
     time: Res<Time>, // Zamanı almak için Time resource'unu ekliyoruz
     game_parameters: Res<GameResource>,
     mut animation_events: EventWriter<AnimationChangeEvent>,
-    mut player_query: Query<(
-        Entity,
-        &PlayerMobilityComponent,
-        &mut Transform,
-        &ActionState<PlayerAction>,
-        &AnimationState,
-        &mut PlayerVelocityComponent, // Yeni PlayerVelocity component'ını ekliyoruz
-    ), With<PlayerComponent>>,
+    mut player_query: Query<
+        (
+            Entity,
+            &PlayerMobilityComponent,
+            &mut Transform,
+            &ActionState<PlayerAction>,
+            &AnimationState,
+            &mut PlayerVelocityComponent,
+        ),
+        With<PlayerComponent>,
+    >,
 ) {
     for (
         entity,
@@ -24,7 +30,7 @@ pub fn movement_system(
         mut transform,
         action_state,
         current_animation_state,
-        mut player_velocity, // PlayerVelocity'yi mutable olarak alıyoruz
+        mut player_velocity,
     ) in player_query.iter_mut()
     {
         // Input okuma
@@ -49,7 +55,7 @@ pub fn movement_system(
         let desired_scale_x = match x_axis {
             1 => game_parameters.sprite_scale.abs(),
             -1 => -game_parameters.sprite_scale.abs(),
-            _ => transform.scale.x, // Mevcut ölçeği koru eğer hareket yoksa veya sadece dikey hareket varsa
+            _ => transform.scale.x, /* Mevcut ölçeği koru eğer hareket yoksa veya sadece dikey hareket varsa */
         };
 
         if transform.scale.x != desired_scale_x {
@@ -59,27 +65,34 @@ pub fn movement_system(
         // Hareket girdisi var mı?
         let has_movement_input = x_axis != 0 || y_axis != 0;
 
-        // Hedef animasyon durumunu belirle
-        let target_animation_state = if has_movement_input {
-            AnimationState::Running
-        } else {
-            // Eğer hareket girdisi yoksa ve oyuncu neredeyse durmuşsa Idle
-            // Artık kendi PlayerVelocity component'ımızı kullanıyoruz
-            if player_velocity.0.abs() < game_parameters.stop_threshold &&
-                player_velocity.1.abs() < game_parameters.stop_threshold {
-                AnimationState::Idle
-            } else {
-                // Hareket girdisi yok ama hala kayıyor (decelerate oluyor)
-                AnimationState::Running // Durana kadar koşma animasyonu devam eder
-            }
-        };
+        match *current_animation_state {
+            AnimationState::Idle | AnimationState::Run => {
+                // Hareket girdisi var mı?
+                let has_movement_input = x_axis != 0 || y_axis != 0;
 
-        // Eğer hedef animasyon durumu mevcut durumdan farklıysa event gönder
-        if *current_animation_state != target_animation_state {
-            animation_events.send(AnimationChangeEvent {
-                entity,
-                state: target_animation_state,
-            });
+                let target_animation_state = if has_movement_input {
+                    AnimationState::Run
+                } else {
+                    if player_velocity.0.abs() < game_parameters.stop_threshold
+                        && player_velocity.1.abs()
+                            < game_parameters.stop_threshold
+                    {
+                        AnimationState::Idle
+                    } else {
+                        AnimationState::Run
+                    }
+                };
+
+                if *current_animation_state != target_animation_state {
+                    animation_events.send(AnimationChangeEvent {
+                        entity,
+                        state: target_animation_state,
+                    });
+                }
+            },
+            _ => {
+                // Başka bir animasyon oynuyorsa (örneğin saldırı) -> hiçbir şey yapma
+            },
         }
 
         // Hızı güncelle (PlayerVelocity component'ı üzerinde)
@@ -127,7 +140,8 @@ fn apply_axis_movement(
     } else if velocity_axis.abs() > stop_threshold {
         // Hız sıfıra doğru yavaşlıyorsa, yavaşlama miktarını mevcut hızın işaretiyle çarp
         // Bu, hızın sıfırı geçip ters yönde ivmelenmesini önler.
-        let potential_new_velocity = *velocity_axis - deceleration * velocity_axis.signum();
+        let potential_new_velocity =
+            *velocity_axis - deceleration * velocity_axis.signum();
         if potential_new_velocity.signum() == velocity_axis.signum() {
             *velocity_axis = potential_new_velocity;
         } else {

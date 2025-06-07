@@ -16,7 +16,8 @@ use serde::Deserialize;
 pub enum AnimationState {
     #[default]
     Idle,
-    Running,
+    Run,
+    LightAttack,
 }
 
 #[derive(Event)]

@@ -5,7 +5,12 @@
             mode: Repeating,
             direction: Forward,
         ),
-        Running: (
+        Run: (
+            frame_duration: 0.1,
+            mode: Repeating,
+            direction: Forward,
+        ),
+        LightAttack: (
             frame_duration: 0.1,
             mode: Repeating,
             direction: Forward,
