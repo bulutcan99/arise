@@ -14,7 +14,10 @@ use engine::animation::AnimationComponent;
 use engine::character::{Character, CharacterType};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::input::{InputsResource, PlayerAction};
-use engine::player::{PlayerBundle, PlayerData, PlayerIDComponent, PlayerVelocityComponent, PlayersResource};
+use engine::player::{
+    PlayerBundle, PlayerData, PlayerIDComponent, PlayerVelocityComponent,
+    PlayersResource,
+};
 use engine::states::GameCleanup;
 use leafwing_input_manager::prelude::ActionState;
 use leafwing_input_manager::InputManagerBundle;
@@ -124,8 +127,13 @@ fn add_visual_and_animation_components(
     animations_res: &Res<AnimationsResource>,
     initial_animation_state: AnimationState,
 ) {
-    let Some(animation_data) = animations_res.animations.get(&initial_animation_state) else {
-        panic!("Animation data for {:?} missing", initial_animation_state); 
+    let Some(animation_data) =
+        animations_res.animations.get(&initial_animation_state)
+    else {
+        panic!(
+            "Animation data for {:?} missing",
+            initial_animation_state
+        );
     };
 
     entity_commands.insert((
@@ -161,9 +169,7 @@ fn add_physics_components(
     let collider_size_hy =
         char_data.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
 
-    entity_commands.insert((
-        PlayerVelocityComponent(0.0,0.0)
-    ));
+    entity_commands.insert((PlayerVelocityComponent(0.0, 0.0)));
 }
 
 fn add_input_components(
@@ -235,7 +241,7 @@ pub fn spawn_player_system(
 
     let player_bundle =
         PlayerBundle::from(char_data).with_id(PlayerIDComponent::One);
-    let initial_animation_state = AnimationState::Idle;
+    let initial_animation_state = AnimationState::Run;
 
     let mut player_entity_commands = commands.spawn_empty();
 

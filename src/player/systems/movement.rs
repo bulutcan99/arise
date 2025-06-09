@@ -1,3 +1,4 @@
+use bevy::log::debug;
 use bevy::prelude::*;
 use engine::animation::states::{AnimationChangeEvent, AnimationState};
 use engine::input::PlayerAction;
@@ -9,7 +10,7 @@ use leafwing_input_manager::prelude::*;
 use crate::game::resources::GameResource;
 
 pub fn movement_system(
-    time: Res<Time>, // Zamanı almak için Time resource'unu ekliyoruz
+    time: Res<Time>,
     game_parameters: Res<GameResource>,
     mut animation_events: EventWriter<AnimationChangeEvent>,
     mut player_query: Query<
@@ -55,50 +56,33 @@ pub fn movement_system(
         let desired_scale_x = match x_axis {
             1 => game_parameters.sprite_scale.abs(),
             -1 => -game_parameters.sprite_scale.abs(),
-            _ => transform.scale.x, /* Mevcut ölçeği koru eğer hareket yoksa veya sadece dikey hareket varsa */
+            _ => transform.scale.x,
         };
 
         if transform.scale.x != desired_scale_x {
             transform.scale.x = desired_scale_x;
         }
 
-        // Hareket girdisi var mı?
         let has_movement_input = x_axis != 0 || y_axis != 0;
 
-        match *current_animation_state {
-            AnimationState::Idle | AnimationState::Run => {
-                // Hareket girdisi var mı?
-                let has_movement_input = x_axis != 0 || y_axis != 0;
-
-                let target_animation_state = if has_movement_input {
-                    AnimationState::Run
-                } else {
-                    if player_velocity.0.abs() < game_parameters.stop_threshold
-                        && player_velocity.1.abs()
-                            < game_parameters.stop_threshold
-                    {
-                        AnimationState::Idle
-                    } else {
-                        AnimationState::Run
-                    }
-                };
-
-                if *current_animation_state != target_animation_state {
-                    animation_events.send(AnimationChangeEvent {
-                        entity,
-                        state: target_animation_state,
-                    });
-                }
-            },
-            _ => {
-                // Başka bir animasyon oynuyorsa (örneğin saldırı) -> hiçbir şey yapma
-            },
+        if has_movement_input {
+            if *current_animation_state != AnimationState::Run {
+                animation_events.send(AnimationChangeEvent {
+                    entity,
+                    state: AnimationState::Run,
+                });
+            }
+        } else {
+            debug!(
+                "Hareket yok, animasyon durumu değişmedi: {:?}",
+                current_animation_state
+            );
         }
 
-        // Hızı güncelle (PlayerVelocity component'ı üzerinde)
+        // Hızı güncelle
         apply_axis_movement(
             x_axis,
-            &mut player_velocity.0, // PlayerVelocity.x'i güncelle
+            &mut player_velocity.0,
             player_mobility.acceleration.x,
             player_mobility.deceleration.x,
             player_mobility.speed.x,
@@ -107,21 +91,16 @@ pub fn movement_system(
 
         apply_axis_movement(
             y_axis,
-            &mut player_velocity.1, // PlayerVelocity.y'yi güncelle
+            &mut player_velocity.1,
             player_mobility.acceleration.y,
             player_mobility.deceleration.y,
             player_mobility.speed.y,
             game_parameters.stop_threshold,
         );
 
-        // Hızı Transform'a uygula (delta time ile çarparak)
-        // Bu, hareketi kare hızından bağımsız hale getirir.
+        // Hızı pozisyona uygula
         transform.translation.x += player_velocity.0 * time.delta_secs();
         transform.translation.y += player_velocity.1 * time.delta_secs();
-
-        // İsteğe bağlı: Zıplama vs. için yerçekimi gibi şeyler burada eklenebilir
-        // player_velocity.y -= GRAVITY * time.delta_seconds();
-        // Sonra transform.translation.y güncellenir.
     }
 }
 

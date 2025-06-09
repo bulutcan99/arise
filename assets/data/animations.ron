@@ -1,10 +1,5 @@
 (
     animations: {
-        Idle: (
-            frame_duration: 0.3,
-            mode: Repeating,
-            direction: Forward,
-        ),
         Run: (
             frame_duration: 0.1,
             mode: Repeating,

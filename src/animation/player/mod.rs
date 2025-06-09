@@ -6,6 +6,7 @@ use engine::player::PlayerComponent;
 
 use crate::animation::animation::AnimationsResource;
 
+// TODO: player hicbir hareket almadiginda idle'a gecicek
 pub fn player_handle_animation_change(
     mut events: EventReader<AnimationChangeEvent>,
     animations_resource: Res<AnimationsResource>,
@@ -64,12 +65,12 @@ pub fn player_handle_animation_change(
             anim_component.mode = new_anim_data.mode;
 
             let (image, layout) = match event.state {
-                AnimationState::Idle => {
-                    (
-                        player_assets.idle_image.clone(),
-                        player_assets.idle_layout.clone(),
-                    )
-                },
+                // AnimationState::Idle => {
+                // 	(
+                // 		player_assets.idle_image.clone(),
+                // 		player_assets.idle_layout.clone(),
+                // 	)
+                // }
                 AnimationState::Run => {
                     (
                         player_assets.run_image.clone(),
