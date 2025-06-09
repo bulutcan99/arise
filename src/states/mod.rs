@@ -1,8 +1,13 @@
 use assets::player::shadow::PlayerShadowAssets;
-use bevy::prelude::{apply_deferred, App, AppExtStates, IntoSystemSetConfigs, NextState, OnEnter, OnExit, Plugin, Res, ResMut, State};
-use bevy_asset_loader::prelude::*;
+use assets::spawnable::projectile::ProjectileAssets;
 use assets::weapon::WeaponAssets;
-use engine::states::{AppStates};
+use bevy::prelude::{
+    apply_deferred, App, AppExtStates, IntoSystemSetConfigs, NextState,
+    OnEnter, OnExit, Plugin, Res, ResMut, State,
+};
+use bevy_asset_loader::prelude::*;
+use engine::states::AppStates;
+
 use crate::player::spawn::spawn_player_system;
 use crate::weapon::spawn_weapon_system;
 
@@ -20,8 +25,12 @@ impl Plugin for StatesPlugin {
                 .with_dynamic_assets_file::<StandardDynamicAssetCollection>(
                     "weapon_assets.assets.ron",
                 )
+                .with_dynamic_assets_file::<StandardDynamicAssetCollection>(
+                    "projectile_assets.assets.ron",
+                )
                 .load_collection::<PlayerShadowAssets>()
-                .load_collection::<WeaponAssets>(),
+                .load_collection::<WeaponAssets>()
+                .load_collection::<ProjectileAssets>(),
         );
 
         app.add_systems(
@@ -29,7 +38,7 @@ impl Plugin for StatesPlugin {
             (
                 spawn_player_system,
                 spawn_weapon_system,
-                transition_to_ingame
+                transition_to_ingame,
             ),
         );
     }
@@ -38,3 +47,4 @@ impl Plugin for StatesPlugin {
 fn transition_to_ingame(mut state: ResMut<NextState<AppStates>>) {
     state.set(AppStates::InGame);
 }
+

@@ -2,8 +2,6 @@ use bevy::log;
 use bevy::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::spwanable::MobType;
-
 /// Event triggered when an entity (e.g., an enemy) is defeated.
 #[derive(Event)]
 pub struct EnemyDefeatedEvent {

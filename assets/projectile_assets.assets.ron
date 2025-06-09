@@ -1,0 +1,7 @@
+
+({
+     "projectile.bullet.image": File(
+         path: "texture/projectile/bullet/bullet.png",
+     ),
+ }
+)

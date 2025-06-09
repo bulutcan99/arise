@@ -9,6 +9,6 @@ pub mod input;
 pub mod objective;
 pub mod player;
 pub mod run;
-pub mod spwanable;
+pub mod spawnable;
 pub mod states;
 pub mod weapon;
