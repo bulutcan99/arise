@@ -241,7 +241,7 @@ pub fn spawn_player_system(
 
     let player_bundle =
         PlayerBundle::from(char_data).with_id(PlayerIDComponent::One);
-    let initial_animation_state = AnimationState::Run;
+    let initial_animation_state = AnimationState::Idle;
 
     let mut player_entity_commands = commands.spawn_empty();
 

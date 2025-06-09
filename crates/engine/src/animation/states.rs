@@ -15,7 +15,7 @@ use serde::Deserialize;
 )]
 pub enum AnimationState {
     #[default]
-    // Idle,
+    Idle,
     Run,
     LightAttack,
 }
