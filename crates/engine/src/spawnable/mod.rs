@@ -31,7 +31,7 @@ pub enum SpawnableType {
 #[derive(Deserialize, Debug, Hash, PartialEq, Eq, Clone, Display, Copy)]
 pub enum Faction {
 	Ally,
-	Enemy,
+	// Enemy,
 }
 
 

@@ -11,7 +11,7 @@ use leafwing_input_manager::plugin::InputManagerPlugin;
 use systems::movement::movement_system;
 
 use crate::player::character::CharactersResource;
-use crate::player::systems::attack::light_attack_system;
+use systems::combat::attack::light_attack_system;
 
 pub mod character;
 pub mod spawn;

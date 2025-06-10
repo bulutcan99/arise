@@ -79,7 +79,6 @@ pub fn movement_system(
             );
         }
 
-        // Hızı güncelle
         apply_axis_movement(
             x_axis,
             &mut player_velocity.0,

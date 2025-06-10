@@ -4,7 +4,7 @@ use serde::Deserialize;
 use crate::abilities::{AbilityCooldownComponent, AbilitySlotIDComponent};
 
 // === Ability1 ===
-/// Bundle used for spawning the shadow summon ability entity as part of a player or system.
+/// Bundle used for spawning the shadow summon ability entity as part of a player or systems.
 /// Groups all related components together for simplified spawning.
 #[derive(Bundle, Clone)]
 pub struct ShadowSummonBundle {

@@ -6,13 +6,12 @@ use bevy_rapier2d::prelude::*;
 use engine::states::AppStates;
 use leafwing_input_manager::plugin::CentralInputStorePlugin;
 use options::display::DisplayConfig;
-
+use player::systems::combat;
 use crate::consts::SIMULATION_SCALE_FACTOR;
 use crate::game::counters;
 
 mod animation;
 mod camera;
-mod combat;
 mod consts;
 mod dev;
 mod game;

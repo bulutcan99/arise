@@ -33,24 +33,6 @@ pub fn light_attack_system(
         _mut_player_velocity,
     ) in player_query.iter_mut()
     {
-        let is_attack_pressed =
-            action_state.pressed(&PlayerAction::LightAttack);
-
-        if is_attack_pressed
-            && *current_animation_state != AnimationState::LightAttack
-        {
-            animation_events.send(AnimationChangeEvent {
-                entity,
-                state: AnimationState::LightAttack,
-            });
-            info!("Light attack started (pressed)");
-        }
-
-        if !is_attack_pressed
-            && *current_animation_state == AnimationState::LightAttack
-        {
-            // Opsiyonel: saldırı tuşu bırakıldığında geri idle/run vs. yapılacaksa buraya yazılır.
-            debug!("Light attack input released");
-        }
+        debug!("{:?}", action_state);
     }
 }

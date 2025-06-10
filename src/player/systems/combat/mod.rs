@@ -3,6 +3,8 @@ use engine::combat::{DamageDealtEvent, HealthRegainResetEvent};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::player::PlayerComponent;
 
+pub mod attack;
+
 pub struct CombatPlugin;
 
 impl Plugin for CombatPlugin {
@@ -15,7 +17,7 @@ impl Plugin for CombatPlugin {
 
 /// System that handles health regeneration over time for player entities only.
 ///
-/// This system simulates a delayed regeneration mechanism, where a player begins
+/// This systems simulates a delayed regeneration mechanism, where a player begins
 /// to regain health gradually if they haven't taken damage for a specified period.
 ///
 /// Internally, it uses two timers per player:
@@ -27,7 +29,7 @@ impl Plugin for CombatPlugin {
 /// When the delay timer completes, the interval timer starts ticking. Every time it finishes,
 /// a fixed amount of health is restored, as specified in the `HealthRegainComponent`.
 ///
-/// This system assumes that the `HealthRegainComponent::reset()` method is called elsewhere (e.g., in the
+/// This systems assumes that the `HealthRegainComponent::reset()` method is called elsewhere (e.g., in the
 /// `damage_system`) to restart the delay timer whenever the player takes damage.
 ///
 /// ### Components required per entity:
@@ -58,7 +60,7 @@ fn regenerate_health_system(
 
 /// System that resets the health regeneration state for player entities upon receiving a reset event.
 ///
-/// This system listens for [`HealthRegainResetEvent`] events, which are typically emitted
+/// This systems listens for [`HealthRegainResetEvent`] events, which are typically emitted
 /// when an entity takes damage. Upon receiving such an event, it checks whether the targeted
 /// entity is a player (via [`PlayerComponent`]) and, if so, resets its [`HealthRegainComponent`].
 ///
@@ -76,10 +78,10 @@ fn regenerate_health_system(
 ///
 /// ### Example Flow:
 /// ```text
-/// Player takes damage → `HealthRegainResetEvent` is emitted → this system resets regeneration.
+/// Player takes damage → `HealthRegainResetEvent` is emitted → this systems resets regeneration.
 /// ```
 ///
-/// This system ensures that only player entities respond to the regeneration reset logic.
+/// This systems ensures that only player entities respond to the regeneration reset logic.
 fn reset_regenerate_health_system(
     time: Res<Time>,
     mut health_regain_reset_events: EventReader<HealthRegainResetEvent>,
@@ -95,7 +97,7 @@ fn reset_regenerate_health_system(
 
 /// System that processes damage events and applies damage to target entities' health.
 ///
-/// This system listens to [`DamageDealtEvent`] events and, for each event:
+/// This systems listens to [`DamageDealtEvent`] events and, for each event:
 /// - Fetches the corresponding target entity using its [`Entity`] ID.
 /// - Applies damage to the entity's [`HealthComponent`] by calling `.take_damage()`.
 /// - Optionally, this is a good place to trigger visual/audio feedback effects (e.g., hit animations, particles, sound).

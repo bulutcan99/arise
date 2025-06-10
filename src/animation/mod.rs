@@ -25,7 +25,6 @@ use crate::animation::player::player_handle_animation_change;
 use crate::player::character::CharactersResource;
 
 pub mod animation;
-pub mod handler;
 pub mod player;
 
 pub struct SpriteAnimationPlugin;

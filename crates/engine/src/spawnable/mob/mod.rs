@@ -45,7 +45,7 @@ pub enum AllyMobType {
 /// Distinguishes between enemy and ally variants.
 #[derive(Deserialize, Debug, Hash, PartialEq, Eq, Clone, Display)]
 pub enum MobType {
-	Enemy(EnemyMobType),
+	// Enemy(EnemyMobType),
 	Ally(AllyMobType),
 }
 
@@ -53,7 +53,7 @@ impl MobType {
 	/// Returns the faction of the mob (Enemy or Ally).
 	pub fn get_faction(&self) -> Faction {
 		match self {
-			MobType::Enemy(_) => Faction::Enemy,
+			// MobType::Enemy(_) => Faction::Enemy,
 			MobType::Ally(_) => Faction::Ally,
 		}
 	}
@@ -61,7 +61,7 @@ impl MobType {
 	/// Returns the display name of the mob as a `String`.
 	pub fn get_name(&self) -> String {
 		match self {
-			MobType::Enemy(enemy) => enemy.to_string(),
+			// MobType::Enemy(enemy) => enemy.to_string(),
 			MobType::Ally(ally) => ally.to_string(),
 		}
 	}

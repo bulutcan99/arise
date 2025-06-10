@@ -18,3 +18,6 @@ impl ProjectileType {
 		}
 	}
 }
+
+#[derive(Component)]
+pub struct ProjectileComponent;
