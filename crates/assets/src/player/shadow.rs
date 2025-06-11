@@ -17,7 +17,7 @@ pub struct PlayerShadowAssets {
     #[asset(key = "shadow.idle.image")]
     pub idle_image: Handle<Image>,
 
-    // --- Run Animation ---
+    // --- Running Animation ---
     /// The texture atlas layout used for the run animation (8 frames, 128x128 each).
     #[asset(key = "shadow.run.layout")]
     pub run_layout: Handle<TextureAtlasLayout>,

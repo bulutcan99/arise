@@ -6,7 +6,7 @@ use bevy::prelude::{
     OnEnter, OnExit, Plugin, Res, ResMut, State,
 };
 use bevy_asset_loader::prelude::*;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 
 use crate::player::spawn::spawn_player_system;
 use crate::spawnable::projectile::spawn_projectile_system;

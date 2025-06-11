@@ -5,7 +5,7 @@
             mode: Repeating,
             direction: Forward,
         ),
-        Run: (
+        Running: (
             frame_duration: 0.1,
             mode: Repeating,
             direction: Forward,

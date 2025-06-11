@@ -3,7 +3,7 @@ pub mod systems;
 use bevy::prelude::*;
 use assets::spawnable::projectile::ProjectileAssets;
 use engine::spawnable::projectile::ProjectileComponent;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
 use crate::spawnable::projectile::systems::transform::update_projectile_transform;

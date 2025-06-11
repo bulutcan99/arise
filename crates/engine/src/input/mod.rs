@@ -1,5 +1,3 @@
-pub mod events;
-
 use bevy::prelude::*;
 use leafwing_input_manager::prelude::{ActionState, InputMap};
 use leafwing_input_manager::{Actionlike, InputManagerBundle};

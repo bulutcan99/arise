@@ -23,7 +23,7 @@
          offset_y: 0,
      ),
      "shadow.run.image": File(
-         path: "texture/player/shadow/Run.png",
+         path: "texture/player/shadow/Running.png",
      ),
      "shadow.light.attack.layout": TextureAtlasLayout(
          tile_size_x: 128,

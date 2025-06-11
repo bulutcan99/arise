@@ -1,12 +1,12 @@
 use bevy::log::{debug, info};
 use bevy::prelude::{Entity, EventWriter, Query, Res, Time, Transform, With};
-use engine::animation::states::{AnimationChangeEvent, AnimationState};
 use engine::input::PlayerAction;
 use engine::player::{
     PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent,
 };
 use leafwing_input_manager::action_state::ActionState;
-
+use engine::events::AnimationChangeEvent;
+use engine::states::player::PlayerState;
 use crate::game::resources::GameResource;
 pub fn light_attack_system(
     time: Res<Time>,
@@ -18,7 +18,7 @@ pub fn light_attack_system(
             &PlayerMobilityComponent,
             &mut Transform,
             &ActionState<PlayerAction>,
-            &AnimationState,
+            &PlayerState,
             &mut PlayerVelocityComponent,
         ),
         With<PlayerComponent>,

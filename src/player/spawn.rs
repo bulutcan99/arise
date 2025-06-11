@@ -9,7 +9,6 @@ use engine::abilities::{
     AbilitiesResource, SlotOneAbilityType, SlotThreeAbilityType,
     SlotTwoAbilityType,
 };
-use engine::animation::states::AnimationState;
 use engine::animation::AnimationComponent;
 use engine::character::{Character, CharacterType};
 use engine::health::{HealthComponent, HealthRegainComponent};
@@ -18,10 +17,10 @@ use engine::player::{
     PlayerBundle, PlayerData, PlayerIDComponent, PlayerVelocityComponent,
     PlayersResource,
 };
-use engine::states::GameCleanup;
 use leafwing_input_manager::prelude::ActionState;
 use leafwing_input_manager::InputManagerBundle;
-
+use engine::states::player::PlayerState;
+use engine::states::util::GameCleanup;
 use crate::animation::animation::AnimationsResource;
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
@@ -125,7 +124,7 @@ fn add_visual_and_animation_components(
     game_parameters: &Res<GameResource>,
     player_assets: &Res<PlayerShadowAssets>,
     animations_res: &Res<AnimationsResource>,
-    initial_animation_state: AnimationState,
+    initial_animation_state: PlayerState,
 ) {
     let Some(animation_data) =
         animations_res.animations.get(&initial_animation_state)
@@ -241,7 +240,7 @@ pub fn spawn_player_system(
 
     let player_bundle =
         PlayerBundle::from(char_data).with_id(PlayerIDComponent::One);
-    let initial_animation_state = AnimationState::Idle;
+    let initial_animation_state = PlayerState::Idle;
 
     let mut player_entity_commands = commands.spawn_empty();
 

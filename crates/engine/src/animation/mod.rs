@@ -1,4 +1,3 @@
-pub mod states;
 pub mod trigger;
 
 use bevy::prelude::*;

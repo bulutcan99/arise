@@ -13,15 +13,14 @@ use bevy::prelude::{error, Resource};
 use bevy::sprite::{Sprite, TextureAtlas, TextureAtlasLayout};
 use bevy::state::condition::in_state;
 use bevy::time::{Time, Timer, TimerMode};
-use engine::animation::states::AnimationChangeEvent;
 use engine::animation::trigger::{AnimationDirection, PingPongDirection};
 use engine::animation::AnimationComponent;
 use engine::states;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 use serde::Deserialize;
-
+use engine::events::AnimationChangeEvent;
 use crate::animation::animation::AnimationsResource;
-use crate::animation::player::player_handle_animation_change;
+use crate::animation::player::controller::player_animation_controller_system;
 use crate::player::character::CharactersResource;
 
 pub mod animation;
@@ -44,7 +43,7 @@ impl Plugin for SpriteAnimationPlugin {
             Update,
             (
                 animate_sprite_system,
-                player_handle_animation_change,
+                player_animation_controller_system,
             )
                 .run_if(in_state(AppStates::InGame)),
         );

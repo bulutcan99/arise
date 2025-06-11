@@ -2,16 +2,16 @@ use bevy::app::App;
 use bevy::asset::ron::de::from_bytes;
 use bevy::prelude::*;
 use engine::abilities::{
-    AbilitiesResource, AbilityDescriptionsResource, ActivateAbilityEvent,
+    AbilitiesResource, AbilityDescriptionsResource,
 };
 use engine::input::PlayerAction;
 use engine::player::PlayersResource;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 use leafwing_input_manager::plugin::InputManagerPlugin;
-use systems::movement::movement_system;
-
+use engine::events::{DashEvent, HeavyAttackEvent, LightAttackEvent, MoveEvent, UseSkillEvent};
 use crate::player::character::CharactersResource;
-use systems::combat::attack::light_attack_system;
+use crate::player::systems::input::player_input_router_system;
+use crate::player::systems::movement::movement::movement_system;
 
 pub mod character;
 pub mod spawn;
@@ -22,7 +22,12 @@ pub struct PlayerPlugin;
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugins(InputManagerPlugin::<PlayerAction>::default());
-        app.add_event::<ActivateAbilityEvent>();
+        app.add_event::<MoveEvent>();
+        app.add_event::<DashEvent>();
+        app.add_event::<LightAttackEvent>();
+        app.add_event::<HeavyAttackEvent>();
+        app.add_event::<UseSkillEvent>();
+
 
         app.insert_resource(
             from_bytes::<CharactersResource>(include_bytes!(
@@ -49,7 +54,7 @@ impl Plugin for PlayerPlugin {
 
         app.add_systems(
             Update,
-            (movement_system, light_attack_system)
+            (player_input_router_system, movement_system)
                 .run_if(in_state(AppStates::InGame)),
         );
     }

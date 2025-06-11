@@ -3,7 +3,7 @@ use bevy::input::InputPlugin;
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::*;
 use bevy_rapier2d::prelude::*;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 use leafwing_input_manager::plugin::CentralInputStorePlugin;
 use options::display::DisplayConfig;
 use player::systems::combat;

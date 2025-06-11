@@ -9,7 +9,7 @@ use assets::weapon::WeaponAssets;
 use engine::abilities::AbilitiesResource;
 use engine::input::InputsResource;
 use engine::player::PlayersResource;
-use engine::states::AppStates;
+use engine::states::app::AppStates;
 use engine::weapon::WeaponComponent;
 use crate::animation::animation::AnimationsResource;
 use crate::game::resources::GameResource;

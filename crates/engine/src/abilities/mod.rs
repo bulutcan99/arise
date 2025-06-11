@@ -47,23 +47,6 @@ pub struct AbilityDescriptionsResource {
     pub slot_three: HashMap<SlotThreeAbilityType, String>,
 }
 
-/// Event for triggering ability systems to fire when criteria like inputs and cooldowns are met
-#[derive(Event, Debug)]
-pub struct ActivateAbilityEvent {
-    /// ID of the player that activated the ability
-    pub player_id: PlayerIDComponent,
-    /// Slot of the ability that was activated
-    pub ability_slot_id: AbilitySlotIDComponent,
-}
-
-impl ActivateAbilityEvent {
-    pub fn new(player_id: PlayerIDComponent, ability_slot_id: AbilitySlotIDComponent) -> Self {
-        Self {
-            player_id,
-            ability_slot_id,
-        }
-    }
-}
 
 /// Component for tracking ability cooldowns
 #[derive(Component, Deserialize, Clone)]
