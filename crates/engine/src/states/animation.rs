@@ -9,8 +9,17 @@ pub struct AnimationStateMachine {
 }
 
 impl AnimationStateMachine {
-    pub fn set(&mut self, new: PlayerState) {
-        self.previous = Some(self.current);
-        self.current = new;
+    pub fn set(&mut self, new_state: PlayerState) -> bool {
+        if self.current != new_state {
+            self.previous = Some(self.current);
+            self.current = new_state;
+            true
+        } else {
+            false
+        }
+    }
+
+    pub fn changed(&self) -> bool {
+        self.previous != Some(self.current)
     }
 }

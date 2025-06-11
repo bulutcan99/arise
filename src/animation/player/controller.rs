@@ -1,10 +1,14 @@
-use bevy::log::{debug, info, warn};
-use bevy::prelude::{Entity, EventReader, Query, Res, Sprite, TextureAtlas, Timer, With};
 use assets::player::shadow::PlayerShadowAssets;
+use bevy::log::{debug, info, warn};
+use bevy::prelude::{
+    Entity, EventReader, Query, Res, Sprite, TextureAtlas, Timer, With,
+};
 use engine::animation::AnimationComponent;
 use engine::events::AnimationChangeEvent;
 use engine::player::PlayerComponent;
+use engine::states::animation::AnimationStateMachine;
 use engine::states::player::PlayerState;
+
 use crate::animation::animation::AnimationsResource;
 
 pub fn player_animation_controller_system(
@@ -13,51 +17,34 @@ pub fn player_animation_controller_system(
     player_assets: Res<PlayerShadowAssets>,
     mut query: Query<
         (
-            Entity,
             &mut AnimationComponent,
             &mut Sprite,
-            &mut PlayerState,
+            &mut AnimationStateMachine,
         ),
         With<PlayerComponent>,
     >,
 ) {
     for event in events.read() {
-        debug!(
-            "Player animation change event for entity {:?} to state: {:?}",
-            event.entity, event.state
-        );
-
         let Ok((
-                   _entity,
-                   mut anim_component,
-                   mut sprite,
-                   mut current_anim_state,
-               )) = query.get_mut(event.entity)
-        else {
-            log::warn!(
-                "Failed to get player components for entity {:?} in AnimationChangeEvent.",
-                event.entity
-            );
+            mut anim_component,
+            mut sprite,
+            mut state_machine,
+        )) = query.get_mut(event.entity) else {
+            warn!("Failed to get components for AnimationChangeEvent on entity {:?}", event.entity);
             continue;
         };
 
-        if *current_anim_state == event.state {
-            log::info!("Animation state {:?} is already active and not delayed. Skipping.", event.state);
+        if !state_machine.set(event.state) {
+            debug!(
+                "Animation state {:?} already active.",
+                event.state
+            );
             continue;
         }
 
         if let Some(new_anim_data) =
             animations_resource.animations.get(&event.state)
         {
-            debug!(
-                "Changing animation for entity {:?} from {:?} to {:?}",
-                event.entity, *current_anim_state, event.state
-            );
-
-            *current_anim_state = event.state;
-            info!("Animation change event for entity {:?} to state {:?}", event.entity, event.state);
-            anim_component.timer.pause();
-
             anim_component.timer = Timer::from_seconds(
                 new_anim_data.frame_duration,
                 new_anim_data.mode.into(),
@@ -88,20 +75,13 @@ pub fn player_animation_controller_system(
 
             *sprite =
                 Sprite::from_atlas_image(image, TextureAtlas::from(layout));
-
-            debug!(
-                "Successfully set entity {:?} to {:?} animation.",
-                event.entity, event.state
-            );
+            anim_component.timer.reset();
+            anim_component.timer.unpause();
         } else {
             warn!(
-                "Animation data not found in AnimationsResource for state: {:?} (entity: {:?}). Player animation unchanged.",
-                event.state, event.entity
+                "Animation data not found for state {:?}",
+                event.state
             );
         }
-
-        anim_component.timer.reset();
-        anim_component.timer.unpause();
-        debug!("Animation started.");
     }
 }

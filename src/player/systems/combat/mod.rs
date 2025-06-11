@@ -3,7 +3,7 @@ use engine::combat::{DamageDealtEvent, HealthRegainResetEvent};
 use engine::health::{HealthComponent, HealthRegainComponent};
 use engine::player::PlayerComponent;
 
-pub mod attack;
+pub mod light_attack;
 
 pub struct CombatPlugin;
 
@@ -11,7 +11,14 @@ impl Plugin for CombatPlugin {
     fn build(&self, app: &mut App) {
         app.add_event::<DamageDealtEvent>()
             .add_event::<HealthRegainResetEvent>()
-            .add_systems(Update, (damage_system, regenerate_health_system, reset_regenerate_health_system));
+            .add_systems(
+                Update,
+                (
+                    damage_system,
+                    regenerate_health_system,
+                    reset_regenerate_health_system,
+                ),
+            );
     }
 }
 
@@ -50,13 +57,18 @@ impl Plugin for CombatPlugin {
 /// ```
 fn regenerate_health_system(
     time: Res<Time>,
-    mut query: Query<(&mut HealthComponent, &mut HealthRegainComponent), With<PlayerComponent>>,
+    mut query: Query<
+        (
+            &mut HealthComponent,
+            &mut HealthRegainComponent,
+        ),
+        With<PlayerComponent>,
+    >,
 ) {
     for (mut health, mut regain) in query.iter_mut() {
         regain.update(time.delta(), &mut health);
     }
 }
-
 
 /// System that resets the health regeneration state for player entities upon receiving a reset event.
 ///
@@ -94,7 +106,6 @@ fn reset_regenerate_health_system(
     }
 }
 
-
 /// System that processes damage events and applies damage to target entities' health.
 ///
 /// This systems listens to [`DamageDealtEvent`] events and, for each event:
@@ -126,16 +137,13 @@ fn damage_system(
     mut query: Query<(Entity, &mut HealthComponent)>,
 ) {
     for event in damage_dealt_events.read() {
-        if let Ok((_entity, mut health_component))
-            = query.get_mut(event.target) {
+        if let Ok((_entity, mut health_component)) = query.get_mut(event.target)
+        {
             health_component.take_damage(event.damage);
 
-            health_regain_reset_events.send(
-                HealthRegainResetEvent{
-                    entity: event.target,
-                }
-            );
-
+            health_regain_reset_events.send(HealthRegainResetEvent {
+                entity: event.target,
+            });
 
             // TODO: Add visual/audio feedback effect at the entity's position
         }

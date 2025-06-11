@@ -9,7 +9,6 @@ use bevy_asset_loader::prelude::*;
 use engine::states::app::AppStates;
 
 use crate::player::spawn::spawn_player_system;
-use crate::spawnable::projectile::spawn_projectile_system;
 use crate::weapon::spawn_weapon_system;
 
 /// Includes systems that handle state transitions for `AppStates` and `GameStates`. Also includes
@@ -36,16 +35,12 @@ impl Plugin for StatesPlugin {
 
         app.add_systems(
             OnEnter(AppStates::GameInit),
-            (
-                spawn_player_system,
-                spawn_weapon_system,
-                spawn_projectile_system,
-            ),
+            (spawn_player_system, spawn_weapon_system),
         );
 
         app.add_systems(
             OnEnter(AppStates::GameInit),
-            transition_to_ingame
+            transition_to_ingame,
         );
     }
 }
@@ -53,4 +48,3 @@ impl Plugin for StatesPlugin {
 fn transition_to_ingame(mut state: ResMut<NextState<AppStates>>) {
     state.set(AppStates::InGame);
 }
-
