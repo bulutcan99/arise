@@ -1,5 +1,6 @@
 use assets::player::shadow::PlayerShadowAssets;
 use bevy::hierarchy::{ChildBuild, ChildBuilder};
+use bevy::log::tracing_subscriber::fmt::init;
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 use engine::abilities::shadow_monarch::{
@@ -17,10 +18,12 @@ use engine::player::{
     PlayerBundle, PlayerData, PlayerIDComponent, PlayerVelocityComponent,
     PlayersResource,
 };
-use leafwing_input_manager::prelude::ActionState;
-use leafwing_input_manager::InputManagerBundle;
+use engine::states::animation::AnimationStateMachine;
 use engine::states::player::PlayerState;
 use engine::states::util::GameCleanup;
+use leafwing_input_manager::prelude::ActionState;
+use leafwing_input_manager::InputManagerBundle;
+
 use crate::animation::animation::AnimationsResource;
 use crate::game::resources::GameResource;
 use crate::player::character::CharactersResource;
@@ -120,14 +123,13 @@ fn prepare_player_character_data<'a>(
 
 fn add_visual_and_animation_components(
     entity_commands: &mut EntityCommands,
-    char_data: &Character,
     game_parameters: &Res<GameResource>,
     player_assets: &Res<PlayerShadowAssets>,
     animations_res: &Res<AnimationsResource>,
-    initial_animation_state: PlayerState,
+    initial_animation_state: &PlayerState,
 ) {
     let Some(animation_data) =
-        animations_res.animations.get(&initial_animation_state)
+        animations_res.animations.get(initial_animation_state)
     else {
         panic!(
             "Animation data for {:?} missing",
@@ -135,11 +137,27 @@ fn add_visual_and_animation_components(
         );
     };
 
+    let animation_state = AnimationStateMachine {
+        previous: None,
+        current: *initial_animation_state,
+    };
+
     entity_commands.insert((
-        Name::new(format!(
-            "Player - {:?}",
-            char_data.character_type
-        )),
+        AnimationComponent::from(animation_data),
+        Sprite::from_atlas_image(
+            player_assets.idle_image.clone(),
+            TextureAtlas::from(player_assets.idle_layout.clone()),
+        ),
+        animation_state,
+    ));
+}
+
+fn add_physics_components(
+    entity_commands: &mut EntityCommands,
+    game_parameters: &Res<GameResource>,
+) {
+    entity_commands.insert((
+        PlayerVelocityComponent(0.0, 0.0),
         Transform {
             translation: Vec3::ZERO,
             scale: Vec3::new(
@@ -149,26 +167,7 @@ fn add_visual_and_animation_components(
             ),
             ..Default::default()
         },
-        Sprite::from_atlas_image(
-            player_assets.idle_image.clone(),
-            TextureAtlas::from(player_assets.idle_layout.clone()),
-        ),
-        AnimationComponent::from(animation_data),
-        initial_animation_state,
     ));
-}
-
-fn add_physics_components(
-    entity_commands: &mut EntityCommands,
-    char_data: &Character,
-    game_parameters: &Res<GameResource>,
-) {
-    let collider_size_hx =
-        char_data.collider_dimensions.x * game_parameters.sprite_scale / 2.0;
-    let collider_size_hy =
-        char_data.collider_dimensions.y * game_parameters.sprite_scale / 2.0;
-
-    entity_commands.insert((PlayerVelocityComponent(0.0, 0.0)));
 }
 
 fn add_input_components(
@@ -240,24 +239,27 @@ pub fn spawn_player_system(
 
     let player_bundle =
         PlayerBundle::from(char_data).with_id(PlayerIDComponent::One);
-    let initial_animation_state = PlayerState::Idle;
+    let initial_player_state = PlayerState::Idle;
 
     let mut player_entity_commands = commands.spawn_empty();
 
+    player_entity_commands.insert(Name::new(format!(
+        "Player - {:?}",
+        char_data.character_type
+    )));
     player_entity_commands.insert(player_bundle);
+    player_entity_commands.insert(initial_player_state);
 
     add_visual_and_animation_components(
         &mut player_entity_commands,
-        char_data,
         &game_parameters,
         &player_assets,
         &animations_res,
-        initial_animation_state,
+        &initial_player_state,
     );
 
     add_physics_components(
         &mut player_entity_commands,
-        char_data,
         &game_parameters,
     );
 
