@@ -1,6 +1,6 @@
-use bevy::prelude::{Entity, Vec2};
+use bevy::math::Vec2;
+use bevy::prelude::Entity;
 use bevy_ecs_macros::Event;
-use crate::states::player::PlayerState;
 
 #[derive(Event, Debug)]
 pub struct MoveEvent {
@@ -20,10 +20,4 @@ pub struct HeavyAttackEvent(pub Entity);
 pub struct UseSkillEvent {
     pub entity: Entity,
     pub slot: usize,
-}
-
-#[derive(Event, Debug)]
-pub struct AnimationChangeEvent {
-    pub entity: Entity,
-    pub state: PlayerState,
 }

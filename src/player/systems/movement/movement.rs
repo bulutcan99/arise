@@ -1,6 +1,6 @@
 use crate::game::resources::GameResource;
 use bevy::prelude::*;
-use engine::events::MoveEvent;
+use engine::events::action::MoveEvent;
 use engine::player::{
     PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent,
 };

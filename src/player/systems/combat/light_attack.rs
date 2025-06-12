@@ -5,13 +5,12 @@ use engine::player::{
     PlayerComponent, PlayerMobilityComponent, PlayerVelocityComponent,
 };
 use leafwing_input_manager::action_state::ActionState;
-use engine::events::AnimationChangeEvent;
+use engine::events::animation::AnimationChangeEvent;
 use engine::states::player::PlayerState;
 use crate::game::resources::GameResource;
 pub fn light_attack_system(
     time: Res<Time>,
     game_parameters: Res<GameResource>,
-    mut animation_events: EventWriter<AnimationChangeEvent>,
     mut player_query: Query<
         (
             Entity,

@@ -8,7 +8,7 @@ use engine::input::PlayerAction;
 use engine::player::PlayersResource;
 use engine::states::app::AppStates;
 use leafwing_input_manager::plugin::InputManagerPlugin;
-use engine::events::{DashEvent, HeavyAttackEvent, LightAttackEvent, MoveEvent, UseSkillEvent};
+use engine::events::action::{DashEvent, HeavyAttackEvent, LightAttackEvent, MoveEvent, UseSkillEvent};
 use crate::player::character::CharactersResource;
 use crate::player::systems::input::player_input_router_system;
 use crate::player::systems::movement::movement::movement_system;

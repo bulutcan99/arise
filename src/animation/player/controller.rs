@@ -4,7 +4,7 @@ use bevy::prelude::{
     Entity, EventReader, Query, Res, Sprite, TextureAtlas, Timer, With,
 };
 use engine::animation::AnimationComponent;
-use engine::events::AnimationChangeEvent;
+use engine::events::animation::AnimationChangeEvent;
 use engine::player::PlayerComponent;
 use engine::states::animation::AnimationStateMachine;
 use engine::states::player::PlayerState;

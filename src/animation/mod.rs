@@ -18,7 +18,7 @@ use engine::animation::AnimationComponent;
 use engine::states;
 use engine::states::app::AppStates;
 use serde::Deserialize;
-use engine::events::AnimationChangeEvent;
+use engine::events::animation::AnimationChangeEvent;
 use crate::animation::animation::AnimationsResource;
 use crate::animation::player::controller::player_animation_controller_system;
 use crate::player::character::CharactersResource;

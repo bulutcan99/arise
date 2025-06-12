@@ -1,8 +1,9 @@
 use bevy::prelude::*;
-use engine::events::{
-    AnimationChangeEvent, DashEvent, HeavyAttackEvent, LightAttackEvent,
-    MoveEvent, UseSkillEvent,
+
+use engine::events::action::{
+    DashEvent, HeavyAttackEvent, LightAttackEvent, MoveEvent, UseSkillEvent,
 };
+use engine::events::animation::AnimationChangeEvent;
 use engine::input::PlayerAction;
 use engine::player::PlayerComponent;
 use engine::states::player::{try_set_player_state, PlayerState};
@@ -24,7 +25,9 @@ pub fn player_input_router_system(
     mut skill_writer: EventWriter<UseSkillEvent>,
     mut animation_events: EventWriter<AnimationChangeEvent>,
 ) {
-    let Ok((entity, action_state, mut current_player_state)) = action_state_query.get_single_mut() else {
+    let Ok((entity, action_state, mut current_player_state)) =
+        action_state_query.get_single_mut()
+    else {
         error!("Player action state not found.");
         return;
     };
@@ -47,7 +50,7 @@ pub fn player_input_router_system(
     if direction.length_squared() > 0.0 {
         player_states.push(PlayerState::Running);
     }
-    if action_state.just_pressed(&PlayerAction::LightAttack) {
+    if action_state.pressed(&PlayerAction::LightAttack) {
         player_states.push(PlayerState::LightAttack);
     }
 
@@ -72,49 +75,51 @@ pub fn player_input_router_system(
         player_states.push(PlayerState::Idle);
     }
 
-    // 2. En öncelikli state’i seç
-    if let Some(new_state) =
-        player_states.into_iter().max_by_key(|s| s.priority())
-    {
-        // 3. Eğer state değiştiyse:
-        if new_state != *current_player_state {
-            *current_player_state = new_state;
+    let new_state = player_states
+        .into_iter()
+        .max_by_key(|s| s.priority())
+        .unwrap();
 
-            // 4. Animasyonu tetikle
-            info!("New State {:?}", new_state);
-            animation_events.send(AnimationChangeEvent {
-                entity,
-                state: new_state, // Eğer AnimationState’e dönüşüyorsa
-            });
+    println!("Player states: {:?}", new_state);
+    if new_state != *current_player_state {
+        *current_player_state = new_state;
 
-            // 5. Davranış Event’ini tetikle
-            match new_state {
-                PlayerState::Running => {
-                    move_event_writer.send(MoveEvent {
-                        entity,
-                        direction: direction.normalize_or_zero(),
-                    });
-                }
-                PlayerState::LightAttack => {
-                    light_attack_writer.send(LightAttackEvent(entity));
-                }
-                /*
-                Not implemented!
-                PlayerState::HeavyAttack => {
-                    heavy_attack_writer.send(HeavyAttackEvent(entity));
-                }
-                PlayerState::Dashing => {
-                    dash_event_writer.send(DashEvent(entity));
-                }
-                PlayerState::Casting => {
-                    // Slot bilgisi eksik olduğu için burada tahmini 1 yazdım.
-                    skill_writer.send(UseSkillEvent { entity, slot: 1 });
-                }
-                */
-                _ => {
-                    info!("Player state changed to {:?}", new_state);
-                }
+        animation_events.send(AnimationChangeEvent {
+            entity,
+            state: new_state,
+        });
+
+        match new_state {
+            PlayerState::Running => {
+                move_event_writer.send(MoveEvent {
+                    entity,
+                    direction: direction.normalize_or_zero(),
+                });
+            },
+            PlayerState::LightAttack => {
+                light_attack_writer.send(LightAttackEvent(entity));
+            },
+            PlayerState::Idle => {
+                debug!("Idle mod");
             }
+            /*
+            Not implemented!
+            PlayerState::HeavyAttack => {
+                heavy_attack_writer.send(HeavyAttackEvent(entity));
+            }
+            PlayerState::Dashing => {
+                dash_event_writer.send(DashEvent(entity));
+            }
+            PlayerState::Casting => {
+                // Slot bilgisi eksik olduğu için burada tahmini 1 yazdım.
+                skill_writer.send(UseSkillEvent { entity, slot: 1 });
+            }
+            */
+            _ => {
+                error!(
+                    "Player state {:?} not found!", new_state
+                );
+            },
         }
     }
 }
