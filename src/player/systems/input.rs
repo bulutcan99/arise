@@ -80,7 +80,6 @@ pub fn player_input_router_system(
         .max_by_key(|s| s.priority())
         .unwrap();
 
-    println!("Player states: {:?}", new_state);
     if new_state != *current_player_state {
         *current_player_state = new_state;
 
